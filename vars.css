@@ -1,46 +1,40 @@
 :root {
-  /* färger / tema */
   --bg: #0b0b0b;
   --card: #111216;
   --ink: #e6e6e6;
   --muted: #b3b3b3;
-  --gold: #f6c86c;         /* primär accent */
-  --gold-weak: rgba(246,200,108,.35);
-  --ring: rgba(246,200,108,.18);
-  --shadow: 0 14px 34px rgba(0,0,0,.5);
-  --bc:#c7f8db;
-  --gr:rgb(67, 65, 65);
+  --gold: #f6c86c;
+  --gold-weak: rgba(246, 200, 108, .35);
+  --ring: rgba(246, 200, 108, .18);
+  --shadow: 0 14px 34px rgba(0, 0, 0, .5);
+  --bc: #c7f8db;
+  --gr: rgb(67, 65, 65);
   --bg: #000000;
   --panel-bg: #000000;
-  --panel-border: rgba(246,200,108,.6); /* tidigare hårdkodat i num-btn border */
+  --panel-border: rgba(246, 200, 108, .6);
   --panel-contrast: #13141ad3;
   --tile-border: #323328;
   --btn-shadow: 0 0 0 6px rgba(246, 200, 108, .18);
 
 
-  /* accentfärger (Buried) */
   --accent-blue: #1355c0;
-  --accent-yellow: hsl(45,100%,59%);
+  --accent-yellow: hsl(45, 100%, 59%);
   --accent-red: #880000;
   --accent-green: #1f934b;
 
-  /* typsnitt */
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --serif: "Times New Roman", Times, serif;
   --font-base: var(--serif);
 
-  /* layout / UI */
   --radius: 16px;
   --fade-ms: 280ms;
 
-  /* pill / knapp */
   --pill-width: 60px;
   --pill-pad-y: 2px;
   --pill-pad-x: 3px;
   --pill-font-size: 10px;
   --pill-radius: 10px;
 
-  /* sida-specifika variabler (kan överskrivas i media queries) */
   --switch-w: 235px;
   --combos-w: 235px;
   --page-vpad: 32px;
