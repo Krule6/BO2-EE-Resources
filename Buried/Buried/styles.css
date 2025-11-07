@@ -1,0 +1,560 @@
+:root {
+  --bg: #0b0b0b;
+  --card: #111216;
+  --ink: #e6e6e6;
+  --gold: #fbff00;
+  --accent-blue: #1355c0;
+  --accent-yellow: hsl(45, 100%, 59%);
+  --accent-red: #880000;
+  --accent-green: #1f934b;
+  --pill-width: 60px;
+  --pill-pad-y: 2px;
+  --pill-pad-x: 3px;
+  --pill-font-size: 10px;
+  --pill-radius: 10px;
+  --font-base: "Times New Roman", Times, serif;
+}
+
+* {
+  box-sizing: border-box
+}
+
+html,
+body {
+  height: 100%
+}
+
+body {
+  margin: 0;
+  overflow: auto;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-base);
+  line-height: 1.4;
+  background: url("assets/background.jpg") center/cover no-repeat;
+  letter-spacing: .2px;
+  background-repeat: repeat;
+  background-size: auto;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(1200px 800px at 60% 40%, rgba(0, 0, 0, .18), rgba(0, 0, 0, .65));
+}
+
+/*section layout*/
+.page {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  min-height: 100vh;
+  grid-template-columns: minmax(720px, 1.5fr) 340px 340px;
+  align-items: center;
+}
+
+.panel {
+  background: rgba(17, 18, 22, .78);
+  border: 1px solid rgba(246, 200, 108, .6);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.so-background {
+  background: rgba(17, 18, 22, .78);
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 12px;
+  padding: 17px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/*maze*/
+.maze-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(240px, 1fr));
+  min-width: 700px;
+}
+
+.maze-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+  border: 1px solid rgba(246, 200, 108, .6);
+  background: #0f1013;
+
+}
+
+/*switch order*/
+.switch-card {
+  display: grid;
+  row-gap: 10px;
+  align-content: center;
+  align-items: center;
+}
+
+/*switch order header */
+.switch-card>h1 {
+  margin: 0;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: .3px;
+  color: white;
+  justify-self: center;
+}
+
+.switch-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(17, 18, 22, .78);
+  border: 1px solid rgba(144, 117, 63, 0.6);
+  border-radius: 12px;
+  padding: 6px 8px;
+  width: max-content;
+  max-width: 100%;
+}
+
+.color-pill {
+  width: var(--pill-width);
+  min-width: var(--pill-width);
+  text-align: center;
+  font-weight: 800;
+  border-radius: var(--pill-radius);
+  padding: var(--pill-pad-y) var(--pill-pad-x);
+  font-size: var(--pill-font-size);
+  border: 1px solid rgba(255, 255, 255, .08);
+  justify-self: center;
+}
+
+.color-pill.blue {
+  background: var(--accent-blue);
+  color: whitesmoke;
+}
+
+.color-pill.yellow {
+  background: var(--accent-yellow);
+  color: whitesmoke;
+}
+
+.color-pill.red {
+  background: var(--accent-red);
+  color: whitesmoke;
+
+}
+
+.color-pill.green {
+  background: var(--accent-green);
+  color: whitesmoke;
+}
+
+.num-group {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 6px;
+  margin-left: 6px;
+  justify-self: center;
+}
+
+.num-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px
+}
+
+.num-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid rgba(246, 200, 108, .6);
+  background: transparent;
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  transition: box-shadow .12s, transform .05s, background .12s, border-color .12s;
+}
+
+.num-btn:hover {
+  box-shadow: 0 0 0 4px rgba(246, 200, 108, .15)
+}
+
+.num-btn.selected {
+  background: var(--gold);
+  color: #171717;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 6px rgba(246, 200, 108, .18)
+}
+
+.num-btn.disabled {
+  opacity: .35;
+  filter: grayscale(.6);
+  cursor: not-allowed;
+  box-shadow: none !important
+}
+
+.x-btn {
+  width: 34px;
+  height: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: #13141a;
+  color: #e08c8c;
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.x-btn:hover {
+  filter: brightness(1.08)
+}
+
+.x-btn.active {
+  border-color: #ff8f8f;
+  background: #2a1212;
+  color: #ffb4b4
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.result-card {
+  background: rgba(17, 18, 22, .78);
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 10px;
+  padding: 10px;
+  max-width: none;
+}
+
+.result-title {
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-size: 14px
+}
+
+.order-line {
+  font-size: 12px;
+  letter-spacing: .1px;
+  font-weight: 700;
+  color: #dadada
+}
+
+.order-line .pos strong {
+  color: var(--gold)
+}
+
+.action-btn {
+  padding: 4px 8px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, .14);
+  background: #1a1b21;
+  color: #eee;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.action-btn.danger {
+  background: transparent;
+  color: var(--gold);
+  border-color: rgba(246, 200, 108, .6);
+}
+
+.action-btn.small {
+  height: 38px;
+  display: inline-flex;
+  align-items: center
+}
+
+/* possible combinations */
+.possibles-card .pc-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  inline-size: max-content;
+  margin-inline: auto;
+}
+
+.possibles-card h1 {
+  margin: 2px 0 4px;
+  font-size: 40px;
+  text-align: center;
+}
+
+/* removed: .prob h1 (unused) */
+
+.possibles-card .pc-header>* {
+  flex: 0 0 auto;
+  font-size: 20px;
+}
+
+.prob {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent-yellow);
+  background: transparent;
+  border-radius: 999px;
+  padding: 3px 8px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#comboGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* 1 row per combo */
+  row-gap: 4px;
+  /* tighter gap */
+  transform-origin: top left;
+}
+
+.combo-pill {
+  padding: 3px 6px;
+  /* bit tighter */
+  font-size: 30px;
+  /* can decrease to 11px if needed */
+  line-height: 1.2;
+  border-radius: 10px;
+  background: #15171d;
+  border: 1px solid #323328;
+}
+
+.clr {
+  font-weight: 800;
+  text-shadow: 0 1px 2px #000
+}
+
+.clr.blue {
+  color: #7fb0ff
+}
+
+.clr.yellow {
+  color: hsl(45, 100%, 70%)
+}
+
+.clr.red {
+  color: #ff7e7e
+}
+
+.clr.green {
+  color: #66e897
+}
+
+.clr.dash {
+  color: #8a8a8a;
+  font-weight: 700
+}
+
+@media (max-width:1200px) {
+  .page {
+    grid-template-columns: minmax(520px, 1fr) 1fr;
+  }
+
+  .possibles-card {
+    order: 3;
+  }
+}
+
+@media (max-width:900px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* broader maze and tighter switch/possible */
+:root {
+  --switch-w: 235px;
+  --combos-w: 235px;
+  --page-vpad: 32px;
+  --panel-vpad: 18px;
+}
+
+/* 1st column more breadth */
+.page {
+  grid-template-columns: minmax(900px, 2.4fr) var(--switch-w) var(--combos-w);
+}
+
+/* maze: keep 3×2 without scroll*/
+.maze-section {
+  align-self: stretch;
+  display: flex;
+}
+
+.maze-grid {
+  height: calc(100vh - var(--page-vpad) - var(--panel-vpad));
+  width: 100%;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.maze-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.panel.switch-card,
+.panel.possibles-card {
+  padding: 9px;
+}
+
+.switch-card>h1 {
+  font-size: 19px;
+  text-align: center;
+}
+
+.switch-row {
+  padding: 6px 8px;
+}
+
+.color-pill {
+  width: 52px;
+  min-width: 52px;
+  font-size: 12px;
+}
+
+.num-btn {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}
+
+.x-btn {
+  width: 28px;
+  height: 18px;
+  font-size: 10px;
+}
+
+.possibles-card h1 {
+  font-size: 13px;
+  margin: 2px 0 6px;
+}
+
+#comboGrid {
+  row-gap: 6px;
+}
+
+.combo-pill {
+  padding: 3px 6px;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* safeguards for low height or tighter breadth */
+@media (max-height: 760px) {
+  .maze-grid {
+    gap: 10px;
+  }
+
+  .panel.switch-card,
+  .panel.possibles-card {
+    padding: 7px;
+  }
+
+  .combo-pill {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 1200px) {
+
+  :root {
+    --switch-w: 245px;
+    --combos-w: 245px;
+  }
+
+  .page {
+    grid-template-columns: minmax(860px, 2fr) var(--switch-w) var(--combos-w);
+  }
+}
+
+h1,
+.switch-card>h1,
+.order-line,
+.combo-pill,
+.prob,
+.color-pill,
+.num-btn,
+.x-btn {
+  font-family: var(--font-base) !important;
+  justify-self: center;
+}
+
+.footer {
+  position: fixed;
+  left: 50%;
+  bottom: calc(4px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 100;
+  text-shadow: #0b0b0b;
+}
+
+.footer a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 300;
+  font-size: 10px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* --- CIPHERS: samma stil som maze-bilderna, men större och lite bredare --- */
+
+/* Låt cipher-blocket ligga i maze-grid och spänna över hela bredden */
+.cipher-block {
+  grid-column: 1 / -1;          /* full bredd över alla kolumner */
+  margin-top: 12px;             /* samma rytm som mellan maze-korten */
+}
+
+/* Bilden är större än en enskild ruta, med samma look som maze-grid img */
+.cipher-block img {
+  display: block;
+  width: 100%;                  /* fyll hela raden (bredare än varje maze-kort) */
+  height: auto;                 /* behåll proportioner */
+  object-fit: contain;
+
+  /* matcha maze-grid img */
+  border-radius: 14px;
+  border: 1px solid rgba(246, 200, 108, .6);
+  background: #0f1013;
+
+  /* gör den LITE större visuellt på höjden jämfört med en standardrad */
+  /* Justera vid behov om den blir för stor/liten på din skärm */
+  max-height: min(72vh, 1200px);
+  padding: 0;                   /* ingen extra padding runt bilden */
+}
+
+/* På riktigt smala skärmar: ge den luft och undvik att den dominerar helt */
+@media (max-width: 1200px) {
+  .cipher-block img {
+    max-height: min(60vh, 900px);
+  }
+}

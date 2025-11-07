@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Buried - Switch Order Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="page">
+    <!-- maze + cipher section -->
+    <aside class="maze-section">
+      <div class="maze-grid">
+        <!-- Maze-bilderna -->
+        <img src="assets/GoodMaze1.png" alt="Good Maze 1" />
+        <img src="assets/GoodMaze2.png" alt="Good Maze 2" />
+        <img src="assets/GoodMaze3.png" alt="Good Maze 3" />
+        <img src="assets/BadGreen.png" alt="Bad Green" />
+        <img src="assets/BadYellow.png" alt="Bad Yellow" />
+        <img src="assets/BadRed.png" alt="Bad Red (Hedge Yellow)" />
+
+        <!-- CIPHERS UNDER MAZE-BILDERNA
+             Samma struktur (ligger i maze-grid) men spänner över hela bredden -->
+        <!-- ... i maze-grid, under de sex maze-bilderna: -->
+        <div id="ciphers" class="cipher-block">
+          <img src="assets/ciphers.png" alt="Ciphers overview">
+        </div>
+
+    </aside>
+
+    <!-- switch order section -->
+    <section>
+      <section class="panel switch-card">
+        <h1>Switch Order</h1>
+        <div class="switch-list" id="switchList">
+
+          <div class="switch-row" data-color="blue">
+            <span class="color-pill blue">Blue</span>
+            <div class="num-group">
+              <div class="num-col"><button class="num-btn" data-n="1">1</button><button class="x-btn"
+                  data-n="1">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="2">2</button><button class="x-btn"
+                  data-n="2">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="3">3</button><button class="x-btn"
+                  data-n="3">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="4">4</button><button class="x-btn"
+                  data-n="4">×</button></div>
+            </div>
+          </div>
+
+          <div class="switch-row" data-color="yellow">
+            <span class="color-pill yellow">Yellow</span>
+            <div class="num-group">
+              <div class="num-col"><button class="num-btn" data-n="1">1</button><button class="x-btn"
+                  data-n="1">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="2">2</button><button class="x-btn"
+                  data-n="2">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="3">3</button><button class="x-btn"
+                  data-n="3">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="4">4</button><button class="x-btn"
+                  data-n="4">×</button></div>
+            </div>
+          </div>
+
+          <div class="switch-row" data-color="red">
+            <span class="color-pill red">Red</span>
+            <div class="num-group">
+              <div class="num-col"><button class="num-btn" data-n="1">1</button><button class="x-btn"
+                  data-n="1">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="2">2</button><button class="x-btn"
+                  data-n="2">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="3">3</button><button class="x-btn"
+                  data-n="3">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="4">4</button><button class="x-btn"
+                  data-n="4">×</button></div>
+            </div>
+          </div>
+
+          <div class="switch-row" data-color="green">
+            <span class="color-pill green">Green</span>
+            <div class="num-group">
+              <div class="num-col"><button class="num-btn" data-n="1">1</button><button class="x-btn"
+                  data-n="1">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="2">2</button><button class="x-btn"
+                  data-n="2">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="3">3</button><button class="x-btn"
+                  data-n="3">×</button></div>
+              <div class="num-col"><button class="num-btn" data-n="4">4</button><button class="x-btn"
+                  data-n="4">×</button></div>
+            </div>
+          </div>
+
+          <div class="result-row">
+            <div class="result-card">
+              <div class="order-line"><span id="orderStr">–</span></div>
+            </div>
+          </div>
+
+          <div class="result-btn">
+            <button id="resetBtn" class="action-btn danger small">Reset</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!--pc-section-->
+    <section class="panel possibles-card">
+      <div class="pc-header">
+        <h1>Possible Combinations</h1>
+      </div>
+      <h1>Odds:<span id="probDisplay" class="prob"></span></h1>
+      <div id="comboGrid" class="combo-grid"></div>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+
+</body>
+
+</html>

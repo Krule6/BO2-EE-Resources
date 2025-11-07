@@ -1,0 +1,201 @@
+:root {
+    --bg: #0b0b0b;
+    --ink: #e6e6e6;
+    --muted: #b3b3b3;
+    --card: #111216;
+    --gold: #f6c86c;
+    --gold-weak: rgba(246, 200, 108, .35);
+    --ring: rgba(246, 200, 108, .18);
+    --radius: 16px;
+    --shadow: 0 14px 34px rgba(0, 0, 0, .5);
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --serif: "Times New Roman", Times, serif;
+    --fade-ms: 280ms;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  /* Page fade: start osynlig, fade-in vid laddning, fade-out vid utgång */
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: url("./assets/bo2zomb.jpg") center / cover no-repeat fixed;
+    font-family: var(--serif);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(12px, 2.5vw, 28px);
+
+    opacity: 0;
+    filter: blur(3px);
+    transition: opacity var(--fade-ms) ease, filter var(--fade-ms) ease;
+  }
+
+  body.ready {
+    opacity: 1;
+    filter: none;
+  }
+
+  body.leaving {
+    opacity: 0;
+    filter: blur(3px);
+  }
+
+  .wrap {
+    width: min(1200px, 98vw);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: clamp(10px, 2vw, 16px);
+  }
+
+  h1 {
+    margin: 0 0 4px 0;
+    font-size: clamp(26px, 3.5vw, 40px);
+    letter-spacing: .3px;
+    font-weight: 700;
+  }
+
+  .sub {
+    margin: 0;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 14px;
+  }
+
+  /* --- GRID --- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(10px, 2vw, 18px);
+  }
+
+  @media (max-width: 980px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* --- CLICKABLE SECTIONS (cards) --- */
+  .tile {
+    position: relative;
+    border: 1px solid #c7f8db;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    min-height: clamp(220px, 36vw, 360px);
+    background: var(--card);
+    isolation: isolate;
+  }
+
+  .tile:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: saturate(0.95) contrast(1.02) brightness(0.9);
+    transition: transform .35s ease, filter .35s ease, opacity .35s ease;
+    z-index: 0;
+  }
+
+  .tile.tranzit:before {
+    background-image: url("./assets/tranzit-background.jpg");
+  }
+
+  .tile.dierise:before {
+    background-image: url("./assets/dierise-background.jpg");
+  }
+
+  .tile.buried:before {
+    background-image: url("./assets/buried-background.webp");
+  }
+
+  .tile::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 6px var(--ring) inset;
+    opacity: 0;
+    transition: opacity .25s ease;
+    pointer-events: none;
+  }
+
+  .tile a {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: clamp(12px, 2.4vw, 22px);
+    color: inherit;
+    text-decoration: none;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, .65) 100%);
+    transition: transform .25s ease;
+  }
+
+  .tile h2 {
+    margin: 0;
+    font-size: clamp(20px, 2.8vw, 28px);
+    font-weight: 800;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, .8);
+    letter-spacing: .4px;
+  }
+
+  .tile p {
+    margin: .25rem 0 0 0;
+    font-family: var(--sans);
+    color: var(--muted);
+    font-size: clamp(12px, 1.5vw, 14px);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .8);
+  }
+
+  .tile:hover::after,
+  .tile:focus-within::after {
+    opacity: 1;
+  }
+
+  .tile:hover:before,
+  .tile:focus-within:before {
+    transform: scale(1.06);
+    filter: saturate(1.1) contrast(1.06) brightness(0.98);
+  }
+
+  .tile a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 10px;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: clamp(10px, 2vw, 16px);
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 12px;
+  }
+
+  /* Respektera reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    body {
+      transition: none !important;
+      filter: none !important;
+    }
+
+    .tile:before,
+    .tile a,
+    .tile::after {
+      transition: none !important;
+    }
+  }

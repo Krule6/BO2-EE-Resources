@@ -1,0 +1,48 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background: black center/cover no-repeat fixed;
+}
+
+
+/* Tranzit: 2 kolumner, stora kort */
+.tranzit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* 2 per rad */
+    gap: 18px;
+    /* lite mer luft */
+    align-items: stretch;
+}
+
+/* Större bilder (fyll kortet), samma look som maze */
+.tranzit-grid img {
+    width: 100%;
+    height: auto;
+    /* behåll proportioner */
+    display: block;
+    object-fit: contain;
+
+    border-radius: 14px;
+    border: 1px solid rgba(246, 200, 108, .6);
+    background: #000000;
+
+    /* gör dem visuellt större i höjd på höga skärmar */
+    /* justera 78vh vid behov */
+    max-height: min(78vh, 1400px);
+}
+
+/* 1 kolumn på smalare skärmar */
+@media (max-width: 700px) {
+    .tranzit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tranzit-grid img {
+        max-height: min(65vh, 1000px);
+    }
+}
+
