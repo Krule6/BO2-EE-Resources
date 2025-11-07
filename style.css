@@ -92,7 +92,7 @@ h1 {
 }
 
 .tile.buried:before {
-  background-image: url("./assets/buried-background.webp");
+  background-image: url("./assets/buried-background.jpg");
 }
 
 .tile::after {
