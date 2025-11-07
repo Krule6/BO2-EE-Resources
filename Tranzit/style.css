@@ -1,57 +1,110 @@
 @import "../../vars.css";
 
-html,
-body {
+/* 1) Låt sidan få scroll om det behövs, ta bort fixed-låsningen */
+html, body {
     height: 100%;
-}
-
-body {
-    background: black center/cover no-repeat fixed;
-}
-
-
-/* Tranzit: 2 kolumner, stora kort */
-.tranzit-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    /* 2 per rad */
-    gap: 18px;
-    /* lite mer luft */
-    align-items: stretch;
-}
-
-/* Större bilder (fyll kortet), samma look som maze */
-.tranzit-grid img {
+    margin: 0;
+    padding: 0;
+    /* ta bort: overflow: hidden; */
+    /* ta bort: position: fixed; */
     width: 100%;
+}
+
+/* 2) Centrera allt innehåll i body */
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #000 url("assets/depotbackground.webp") center/cover no-repeat fixed;
+    color: #fff;
+    min-height: 100dvh;             /* stabil viewport-höjd */
+    display: grid;                   /* grid är smidigt för centrerning */
+    place-items: center;             /* horisontellt + vertikalt center */
+    margin: 0;
+    padding: 0;
+}
+
+/* 3) Låt wrappern vara innehållsbaserad och centrerad av body */
+.map-wrapper {
+    position: relative;              /* var: fixed */
+    display: inline-block;           /* krymp till innehållet */
+    background: rgba(0, 0, 0, 0);
+    padding: 2vh;
+    border-radius: var(--radius);
+    overflow: hidden;                /* behåll om du vill klippa ev. överflöd */
+    /* ta bort: inset: 0; align/justify; behövs inte när body centrerar */
+}
+
+/* 4) Bilden håller sig inom viewporten och skalar snyggt */
+#map-img {
+    max-width: 90vw;
+    max-height: 80vh;                /* lite mindre än 90vh för luft */
+    width: auto;
     height: auto;
-    /* behåll proportioner */
     display: block;
-    object-fit: contain;
-
-    border-radius: 14px;
-    border: 1px solid rgba(246, 200, 108, .6);
-    background: #000000;
-
-    /* gör dem visuellt större i höjd på höga skärmar */
-    /* justera 78vh vid behov */
-    max-height: min(78vh, 1400px);
+    user-select: none;
+    -webkit-user-drag: none;
+    border: 3px solid var(--bg);
+    border-radius: var(--radius);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
 }
 
-/* 1 kolumn på smalare skärmar */
-@media (max-width: 700px) {
-    .tranzit-grid {
-        grid-template-columns: 1fr;
+/* Markers/preview kan vara kvar som de är */
+.node-marker {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: var(--bc);
+    border: 2px solid var(--bg);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 15px var(--bc);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.2s ease;
+}
+
+.node-marker:focus,
+.node-marker:hover {
+    transform: translate(-50%, -50%) scale(1.25);
+    box-shadow: 0 0 20px var(--gold);
+    border-color: var(--gold);
+    background: var(--gold-weak);
+}
+
+.preview {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: var(--radius);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    background-repeat: no-repeat;
+    background-color: #000;
+    display: none;
+    z-index: 40;
+    pointer-events: none;
+    overflow: hidden;
+    border: 2px solid var(--bc);
+    padding: 2px;
+}
+
+@media (max-width: 520px) {
+    .preview {
+        width: 200px;
+        height: 200px;
     }
-
-    .tranzit-grid img {
-        max-height: min(65vh, 1000px);
+    .node-marker {
+        width: 20px;
+        height: 20px;
     }
 }
 
-.map-section {
-  margin-top: 20px;
+.node-marker.static {
+    pointer-events: none;
+    transform: translate(-50%, -50%) !important;
+    transition: none !important;
 }
 
-.map-section .grid {
-  gap: clamp(10px, 2vw, 18px);
+.node-marker.static:hover,
+.node-marker.static:focus {
+    transform: translate(-50%, -50%) !important;
+    box-shadow: 0 0 10px var(--gold-weak) !important;
 }

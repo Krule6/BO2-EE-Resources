@@ -1,26 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="sv">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>Tranzit – Portal Destinations</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Tranzit</title>
+	<link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div class="page">
-    <aside class="maze-section">
-      <div class="maze-grid tranzit-grid">
-        <img src="assets/tranzitmap.webp"   alt="Map"/>
-        <img src="assets/town.png"   alt="Town"   />
-        <img src="assets/depot.png"  alt="Depot"  />
-        <img src="assets/diner.png"  alt="Diner"  />
-        <img src="assets/bridge.png" alt="Bridge" />
-        <img src="assets/power.png"  alt="Power"  />
-        <img src="assets/nacht.png"  alt="Nacht/Pylon"/>
-        <img src="assets/midway.png" alt="Midway" />
-        <img src="assets/cabin.png"  alt="Cabin"  />
-      </div>
-    </aside>
-  </div>
+	<main class="map-wrapper">
+		<img id="map-img" src="assets/tranzitmap.jpg" alt="Tranzit map">
+		<div id="nodes-container" class="nodes-container" aria-hidden="false"></div>
+		<div id="preview" class="preview" aria-hidden="true"></div>
+	</main>
+	<script src="map.js" defer></script>
 </body>
+
 </html>
+
