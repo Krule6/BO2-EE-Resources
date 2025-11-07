@@ -20,7 +20,7 @@ A collection of interactive solvers & resources for Call of Duty: Black Ops II -
 
 - A simple and interactive Mahjong Tile Solver.
 
-- Translates the Mahjong Tiles to the corresponding direction
+- Translates the Mahjong Tiles to the corresponding direction/number
   
 - The tool computes the correct order for the Mahjong Tiles by selecting the color for the number & direction of the tiles
 <img src="assets/dierise.png" alt="dierise" width="600">
