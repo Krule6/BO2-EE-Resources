@@ -1,26 +1,5 @@
-:root {
-    --bg: #0b0b0b;
-    --ink: #e6e6e6;
-    --muted: #b3b3b3;
-    --card: #111216;
-    --gold: #f6c86c;
-    --gold-weak: rgba(246, 200, 108, .35);
-    --ring: rgba(246, 200, 108, .18);
-    --radius: 16px;
-    --shadow: 0 14px 34px rgba(0, 0, 0, .5);
-    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --serif: "Times New Roman", Times, serif;
-    --fade-ms: 280ms;
-  }
+@import "vars.css";
 
-  * {
-    box-sizing: border-box;
-  }
-
-  html,
-  body {
-    height: 100%;
-  }
 
   /* Page fade: start osynlig, fade-in vid laddning, fade-out vid utgång */
   body {
@@ -87,7 +66,7 @@
   /* --- CLICKABLE SECTIONS (cards) --- */
   .tile {
     position: relative;
-    border: 1px solid #c7f8db;
+    border: 1px solid var(--bc);
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow);

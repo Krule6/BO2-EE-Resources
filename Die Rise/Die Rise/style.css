@@ -1,3 +1,5 @@
+@import "../../vars.css";
+
 body {
     background: url('./assets/dierise.jpg') no-repeat center center fixed;
     color: #ffcc00;

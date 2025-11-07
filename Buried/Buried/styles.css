@@ -1,63 +1,31 @@
-:root {
-  --bg: #0b0b0b;
-  --card: #111216;
-  --ink: #e6e6e6;
-  --gold: #fbff00;
-  --accent-blue: #1355c0;
-  --accent-yellow: hsl(45, 100%, 59%);
-  --accent-red: #880000;
-  --accent-green: #1f934b;
-  --pill-width: 60px;
-  --pill-pad-y: 2px;
-  --pill-pad-x: 3px;
-  --pill-font-size: 10px;
-  --pill-radius: 10px;
-  --font-base: "Times New Roman", Times, serif;
-}
+@import "../../vars.css";
 
-* {
-  box-sizing: border-box
-}
-
-html,
-body {
-  height: 100%
-}
 
 body {
   margin: 0;
   overflow: auto;
-  background: var(--bg);
+  background: url("./assets/background.jpg") center/cover no-repeat;
   color: var(--ink);
   font-family: var(--font-base);
   line-height: 1.4;
-  background: url("assets/background.jpg") center/cover no-repeat;
   letter-spacing: .2px;
   background-repeat: repeat;
   background-size: auto;
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(1200px 800px at 60% 40%, rgba(0, 0, 0, .18), rgba(0, 0, 0, .65));
-}
-
+/* Switch & Combinations Structure*/
 .page {
   display: grid;
-  gap: 16px;
+  gap: 10px;
   padding: 16px;
-  min-height: 100vh;
-  grid-template-columns: minmax(720px, 1.5fr) 340px 340px;
-  align-items: center;
+  max-height: 100px;
+  grid-template-columns: minmax(750px, 1.5fr) 340px 340px;
+  align-items: left;
 }
-
+/* Switch & Combinations Design*/
 .panel {
-  background: rgba(17, 18, 22, .78);
-  border: 1px solid rgba(246, 200, 108, .6);
+  background: var(--panel-contrast);          /* tidigare var(--bg) eller hårdkodat */
+  border: 1px solid var(--bc);
   border-radius: 12px;
   padding: 10px;
   display: flex;
@@ -66,9 +34,9 @@ body::after {
 }
 
 .so-background {
-  background: rgba(17, 18, 22, .78);
-  border: 1px solid rgba(255, 255, 255, .06);
+  background: var(--bc);
   border-radius: 12px;
+  border: 1px solid var(--gr);
   padding: 17px;
   display: flex;
   flex-direction: column;
@@ -79,25 +47,17 @@ body::after {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(240px, 1fr));
-  min-width: 700px;
+  grid-template-rows: repeat(3, minmax(260px, 1fr));
+  min-width: 720px;
 }
 
 .maze-grid img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  background: var(--panel-contrast);
   border-radius: 14px;
-  border: 1px solid rgba(246, 200, 108, .6);
-  background: #0f1013;
-
-}
-
-.switch-card {
-  display: grid;
-  row-gap: 10px;
-  align-content: center;
-  align-items: center;
+  border: 1px solid var(--bc);
 }
 
 .switch-card>h1 {
@@ -109,6 +69,7 @@ body::after {
   justify-self: center;
 }
 
+/* Switch number list */
 .switch-list {
   display: flex;
   flex-direction: column;
@@ -116,12 +77,13 @@ body::after {
   align-items: center;
 }
 
+/* Switch number row */
 .switch-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(17, 18, 22, .78);
-  border: 1px solid rgba(144, 117, 63, 0.6);
+  background: var(--bg);
+  border: 1px solid var(--gr);
   border-radius: 12px;
   padding: 6px 8px;
   width: max-content;
@@ -180,7 +142,7 @@ body::after {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 2px solid rgba(246, 200, 108, .6);
+  border: 1px solid rgba(246, 200, 108, .6);
   background: transparent;
   color: var(--gold);
   font-weight: 800;
@@ -190,14 +152,14 @@ body::after {
 }
 
 .num-btn:hover {
-  box-shadow: 0 0 0 4px rgba(246, 200, 108, .15)
+   box-shadow: var(--bc-shadow);
 }
 
 .num-btn.selected {
   background: var(--gold);
-  color: #171717;
+  color: var(--bg);
   border-color: var(--gold);
-  box-shadow: 0 0 0 6px rgba(246, 200, 108, .18)
+  box-shadow: var(--btn-shadow);
 }
 
 .num-btn.disabled {
@@ -211,7 +173,7 @@ body::after {
   width: 34px;
   height: 20px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, .14);
+  border: 1px solid var(--ring);
   background: #13141a;
   color: #e08c8c;
   font-weight: 800;
@@ -236,18 +198,11 @@ body::after {
 }
 
 .result-card {
-  background: rgba(17, 18, 22, .78);
-  border: 1px solid rgba(255, 255, 255, .06);
+  background: var(--card);
+  border: 1px solid var(--ring);
   border-radius: 10px;
   padding: 10px;
   max-width: none;
-}
-
-.result-title {
-  color: var(--gold);
-  font-weight: 700;
-  margin-bottom: 4px;
-  font-size: 14px
 }
 
 .order-line {
@@ -257,30 +212,24 @@ body::after {
   color: #dadada
 }
 
-.order-line .pos strong {
-  color: var(--gold)
-}
-
 .action-btn {
   padding: 4px 8px;
   border-radius: 10px;
-  border: 2px solid rgba(255, 255, 255, .14);
-  background: #1a1b21;
-  color: #eee;
+  border: 1px solid var(--ring);
+  background: var(--bg);
+  color: var(--gold);
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 14px;
   font-family: 'Times New Roman', Times, serif;
 }
 
 .action-btn.danger {
   background: transparent;
-  color: var(--gold);
-  border-color: rgba(246, 200, 108, .6);
 }
 
 .action-btn.small {
-  height: 38px;
+  height: 30px;
   display: inline-flex;
   align-items: center
 }
@@ -309,7 +258,7 @@ body::after {
 .prob {
   font-size: 12px;
   font-weight: 800;
-  color: var(--accent-yellow);
+  color: var(--gold);
   background: transparent;
   border-radius: 999px;
   padding: 3px 8px;
@@ -373,13 +322,6 @@ body::after {
   .page {
     grid-template-columns: 1fr;
   }
-}
-
-:root {
-  --switch-w: 235px;
-  --combos-w: 235px;
-  --page-vpad: 32px;
-  --panel-vpad: 18px;
 }
 
 .page {
@@ -492,26 +434,6 @@ h1,
   justify-self: center;
 }
 
-.footer {
-  position: fixed;
-  left: 50%;
-  bottom: calc(4px + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  z-index: 100;
-  text-shadow: #0b0b0b;
-}
-
-.footer a {
-  color: var(--ink);
-  text-decoration: none;
-  font-weight: 300;
-  font-size: 10px;
-}
-
-.footer a:hover {
-  text-decoration: underline;
-}
-
 .cipher-block {
   grid-column: 1 / -1;     
   margin-top: 12px;      
@@ -525,7 +447,7 @@ h1,
   object-fit: contain;
 
   border-radius: 14px;
-  border: 1px solid rgba(246, 200, 108, .6);
+  border: 1px solid var(--bc);
   background: #0f1013;
   max-height: min(72vh, 1200px);
   padding: 0;
