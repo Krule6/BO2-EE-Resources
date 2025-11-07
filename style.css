@@ -180,22 +180,23 @@
 
 footer {
   text-align: center;
-  margin-top: clamp(24px, 4vw, 40px); /* sänk ner footern lite mer */
-  color: #ffffff;
+  margin-top: clamp(24px, 4vw, 40px);
+  color: #fff;
   font-family: var(--sans);
   font-size: 12px;
 }
 
 footer a,
+footer a:link,
 footer a:visited,
-footer a:focus,
-footer a:hover {
-  color: inherit; /* ärva footerns vita färg */
+footer a:hover,
+footer a:active,
+footer a:focus {
+  color: inherit;
   text-decoration: underline;
   outline: none;
 }
 
-  /* Respektera reduced motion */
   @media (prefers-reduced-motion: reduce) {
     body {
       transition: none !important;
