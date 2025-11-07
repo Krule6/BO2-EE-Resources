@@ -1,22 +1,33 @@
-    // Fade-IN when ready
-    const start = () => document.body.classList.add('ready');
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', start);
-    } else { start(); }
+function enter() {
+  document.body.classList.add('ready');
+  document.body.classList.remove('leaving');
+}
 
-    // Intercept clicks for smooth fade-OUT, then navigate
-    document.addEventListener('click', (e) => {
-      const link = e.target.closest('.tile a');
-      if (!link) return;
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', enter);
+} else {
+  enter();
+}
 
-      // låt modifierade klick gå igenom (ny flik mm)
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+window.addEventListener('pageshow', function (ev) {
+  enter();
+});
 
-      e.preventDefault();
-      // respekt för reduced motion
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.tile a');
+  if (!link) return;
 
-      if (reduce) { window.location.href = link.href; return; }
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
 
-      document.body.classList.add('leaving');
-    });
+  e.preventDefault();
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { window.location.href = link.href; return; }
+
+  if (!document.body.classList.contains('leaving')) {
+    document.body.classList.remove('ready');
+    document.body.classList.add('leaving');
+  }
+
+  setTimeout(() => { window.location.href = link.href; }, 280);
+});
