@@ -4,7 +4,7 @@ A collection of interactive solvers & resources for Call of Duty: Black Ops II -
 
 ## Website link
 
-[https://krule6.github.io/BO2-EE-Resources/](https://krule6.github.io/BO2-EE-Resources/)
+[[https://krule6.github.io/BO2-EE-Resources/](https://krule6.github.io/BO2-EE-Resources/)](https://humble-potato-979qjvg6rj7qf74qv-8000.app.github.dev/)
 
 ## Resources & Solvers
 
