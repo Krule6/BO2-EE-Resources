@@ -312,3 +312,14 @@ input {
         max-width: 600px;
     }
 }
+
+
+.text-box {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    min-height: 80px;
+    padding: 12px;
+    width: 260px;
+    box-sizing: border-box;
+}

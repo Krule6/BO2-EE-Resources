@@ -1,329 +1,371 @@
-const DIRECTIONS = ['North', 'West', 'East', 'South'];
+const PYLON_ATTEMPTS = 3;
+const DIRS = ['north', 'west', 'east', 'south'];
+const DIR_LABEL = { north: 'N', west: 'W', east: 'E', south: 'S' };
 const COLORS = ['red', 'blue', 'green', 'black'];
 
-function calculateTileOrder() {
-    const direction = { 'North': document.getElementById("north").value, 'West': document.getElementById("west").value, 'East': document.getElementById("east").value, 'South': document.getElementById("south").value };
+// permutations (24)
+function permutations(arr) {
+    const res = [];
+    const used = Array(arr.length).fill(false);
+    const cur = [];
+    (function backtrack() {
+        if (cur.length === arr.length) {
+            res.push(cur.slice());
+            return;
+        }
+        for (let i = 0; i < arr.length; i++) {
+            if (used[i]) continue;
+            used[i] = true;
+            cur.push(arr[i]);
+            backtrack();
+            cur.pop();
+            used[i] = false;
+        }
+    })();
+    return res;
+}
 
-    const colors = { 'red': parseInt(document.getElementById("red").value), 'blue': parseInt(document.getElementById("blue").value), 'green': parseInt(document.getElementById("green").value), 'black': parseInt(document.getElementById("black").value) };
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-    const match = Object.entries(direction).map(([dir, color]) => {
-        if (!color || isNaN(colors[color])) {
-            return { direction: dir, value: null };
+function readState() {
+    const directionColors = {};
+    DIRS.forEach(d => {
+        const el = document.getElementById(d);
+        directionColors[d] = el ? el.value || '' : '';
+    });
+    const colorNumbers = {};
+    COLORS.forEach(c => {
+        const el = document.getElementById(c);
+        const v = el ? parseInt(el.value) : NaN;
+        colorNumbers[c] = Number.isInteger(v) ? v : NaN;
+    });
+    const colorToDirection = {};
+    for (const d of DIRS) {
+        const c = directionColors[d];
+        if (c) colorToDirection[c] = d;
+    }
+    return { directionColors, colorNumbers, colorToDirection };
+}
+
+function permutationIsValid(perm, state) {
+    const { directionColors, colorNumbers, colorToDirection } = state;
+
+    for (const color of COLORS) {
+        const pos = colorNumbers[color];
+        if (!Number.isInteger(pos)) continue;
+        const dirAtPos = perm[pos - 1];
+        if (colorToDirection[color]) {
+            if (colorToDirection[color] !== dirAtPos) return false;
         } else {
-            return { direction: dir, value: colors[color] };
+            const dirColor = directionColors[dirAtPos];
+            if (dirColor && dirColor !== color) return false;
+        }
+    }
+
+    for (const dir of DIRS) {
+        const dirColor = directionColors[dir];
+        if (!dirColor) continue;
+        const num = colorNumbers[dirColor];
+        if (Number.isInteger(num) && perm[num - 1] !== dir) return false;
+    }
+
+    const seen = {};
+    for (const dir of DIRS) {
+        const c = directionColors[dir];
+        if (!c) continue;
+        if (seen[c] && seen[c] !== dir) return false;
+        seen[c] = dir;
+    }
+
+    return true;
+}
+
+function formatPerm(perm) {
+    return perm.map(d => DIR_LABEL[d] || d.charAt(0).toUpperCase()).join(' -> ');
+}
+
+function updateResultOrder() {
+    const state = readState();
+    const order = [];
+    for (let i = 1; i <= 4; i++) {
+        let found = '?';
+        for (const d of DIRS) {
+            const c = state.directionColors[d];
+            if (c && Number.isInteger(state.colorNumbers[c]) && state.colorNumbers[c] === i) {
+                found = capitalize(d);
+                break;
+            }
+        }
+        order.push(found);
+    }
+    const resEl = document.getElementById('result');
+    if (resEl) resEl.textContent = order.join(' -> ');
+}
+
+function updatePossibleCombinations() {
+    const state = readState();
+    const allPerms = permutations(DIRS);
+    const validPerms = allPerms.filter(p => permutationIsValid(p, state));
+
+    const grid = document.getElementById('comboGrid');
+    const probDisplay = document.getElementById('probDisplay');
+    grid.innerHTML = '';
+
+    const n = validPerms.length;
+    if (!probDisplay) return;
+    if (n === 0) {
+        probDisplay.textContent = '–';
+        const div = document.createElement('div');
+        div.className = 'combo-pill';
+        div.style.color = '#ff4444';
+        div.textContent = 'No valid combinations based on inputs.';
+        grid.appendChild(div);
+        return;
+    }
+
+    // fixed positions implied by direction->color->number inputs
+    const fixedPos = {};
+    for (const dir of DIRS) {
+        const col = state.directionColors[dir];
+        if (col && Number.isInteger(state.colorNumbers[col])) {
+            fixedPos[state.colorNumbers[col]] = dir;
+        }
+    }
+
+    const serial = arr => arr.join('|');
+    const validSet = new Set(validPerms.map(p => serial(p)));
+    const rotateLeft = (arr, k) => arr.slice(k).concat(arr.slice(0, k));
+    const permKey = perm => perm.map(d => DIR_LABEL[d]).join('');
+
+    // map single-letter key -> perm array
+    const letterToDir = { N: 'north', W: 'west', E: 'east', S: 'south' };
+    function keyToPerm(key) {
+        return key.split('').map(ch => letterToDir[ch]);
+    }
+
+    // base north order groups (6 bases starting with N), each group = base + its two left-rotations
+    const northOrder = ["NWSE","NWES","NSWE","NSEW","NEWS","NESW"];
+    const priorityLetters = ['N','W','E','S'];
+
+    // shift a key's letters by k in cycle N->W->E->S
+    const cycle = ['N','W','E','S'];
+    function shiftKey(key, k) {
+        const map = {};
+        for (let i = 0; i < 4; i++) map[cycle[i]] = cycle[(i + k) % 4];
+        return key.split('').map(ch => map[ch]).join('');
+    }
+
+    // build desired lists for N, W, E, S (northorder shifted)
+    const desiredMap = {};
+    for (let i = 0; i < priorityLetters.length; i++) {
+        desiredMap[priorityLetters[i]] = northOrder.map(k => shiftKey(k, i));
+    }
+
+    // Determine required starting direction (if pos1 is fixed e.g. red=1 => fixedPos[1] = 'west')
+    const requiredStart = fixedPos[1] ? DIR_LABEL[fixedPos[1]] : null; // 'N'|'W'|'E'|'S' or null
+
+    let groups = [];
+    for (let pi = 0; pi < priorityLetters.length; pi++) {
+        const startLetter = priorityLetters[pi];
+        const list = desiredMap[startLetter];
+        for (const baseKey of list) {
+            const basePerm = keyToPerm(baseKey);
+            const r1 = rotateLeft(basePerm, 1);
+            const r2 = rotateLeft(basePerm, 2);
+            const candidates = [basePerm, r1, r2];
+            const groupItems = [];
+            for (const cand of candidates) {
+                const s = serial(cand);
+                if (!validSet.has(s)) continue;
+                let ok = true;
+                for (const posStr in fixedPos) {
+                    const pos = parseInt(posStr, 10);
+                    if (cand[pos - 1] !== fixedPos[pos]) { ok = false; break; }
+                }
+                if (!ok) continue;
+                groupItems.push(cand);
+            }
+            if (groupItems.length > 0) groups.push(groupItems);
+        }
+    }
+
+    // If nothing produced (due to fixedPos) fallback to any validPerms that respect fixedPos, grouped as singles
+    if (groups.length === 0) {
+        const fallback = validPerms.filter(p => {
+            for (const posStr in fixedPos) {
+                const pos = parseInt(posStr, 10);
+                if (p[pos - 1] !== fixedPos[pos]) return false;
+            }
+            return true;
+        });
+        fallback.forEach(p => groups.push([p]));
+    }
+
+    // If a starting position is known (e.g. fixedPos[1] => start letter known), only keep groups that contain that start
+    if (requiredStart) {
+        const filtered = groups.filter(group =>
+            group.some(item => permKey(item).startsWith(requiredStart))
+        );
+        if (filtered.length > 0) groups = filtered;
+        // otherwise keep groups as-is (no match)
+    }
+
+    // If user provided any direction-color or any color-number input, dedupe duplicates across groups
+    const hasDirectionColor = Object.values(state.directionColors).some(v => !!v);
+    const hasColorNumber = Object.values(state.colorNumbers).some(v => Number.isInteger(v));
+    const dedupeAcrossGroups = hasDirectionColor || hasColorNumber;
+
+    const emitted = new Set();
+
+    // compute available distinct rotation-tries per group (max group length)
+    const maxGroupSize = groups.reduce((max, g) => Math.max(max, g.length), 0);
+    const availableDistinct = Math.min(PYLON_ATTEMPTS, maxGroupSize);
+
+    const perTryPct = (100 / n);
+    const combinedPct = Math.min(100, (availableDistinct / n) * 100);
+    if (availableDistinct === PYLON_ATTEMPTS) {
+        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — You can try up to ${availableDistinct} distinct combos in one round: ${combinedPct.toFixed(2)}%`;
+    } else {
+        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} tries per round: ${combinedPct.toFixed(2)}%`;
+    }
+
+    // render groups in order; if dedupeAcrossGroups, skip duplicates across groups
+    groups.forEach((group, gi) => {
+        group.forEach(perm => {
+            const s = serial(perm);
+            if (dedupeAcrossGroups && emitted.has(s)) return; // skip duplicate when fixed info exists
+            const block = document.createElement('div');
+            block.className = 'combo-pill';
+            const seqSpan = document.createElement('div');
+            seqSpan.className = 'combo-seq';
+            seqSpan.textContent = formatPerm(perm);
+            block.appendChild(seqSpan);
+            grid.appendChild(block);
+            if (dedupeAcrossGroups) emitted.add(s);
+        });
+        if (gi < groups.length - 1) {
+            const sep = document.createElement('div');
+            sep.className = 'combo-sep';
+            sep.style.height = '8px';
+            grid.appendChild(sep);
         }
     });
 
-    let order = [];
-
-    for (let i = 1; i <= 4; i++) {
-        let colorDirectionMatched = match.find(m => m && m.value === i);
-        order.push(colorDirectionMatched ? colorDirectionMatched.direction : "?");
+    if (availableDistinct < PYLON_ATTEMPTS) {
+        const note = document.createElement('div');
+        note.className = 'combo-note';
+        note.textContent = `Note: rotation-based tries are limited to ${availableDistinct} with current inputs.`;
+        grid.appendChild(note);
     }
-
-    document.getElementById("result").textContent = order.join(" ➡ ");
-    
-    // Update possible combinations
-    updatePossibleCombinations();
 }
 
 function updateColorButtons() {
-    // Get all assigned colors
-    const assignedColors = {};
-    DIRECTIONS.forEach(dir => {
-        const color = document.getElementById(dir.toLowerCase()).value;
-        if (color) {
-            assignedColors[color] = dir;
-        }
+    const assigned = {};
+    DIRS.forEach(dir => {
+        const el = document.getElementById(dir);
+        const c = el ? el.value : '';
+        if (c) assigned[c] = dir;
     });
-
-    // Update all color buttons
-    DIRECTIONS.forEach(dir => {
-        const dirLower = dir.toLowerCase();
-        const currentColor = document.getElementById(dirLower).value;
-        const colorButtons = document.querySelectorAll(`#${dirLower}-pick .color-btn`);
-        
-        colorButtons.forEach(btn => {
+    DIRS.forEach(dir => {
+        const container = document.getElementById(`${dir}-pick`);
+        if (!container) return;
+        container.querySelectorAll('.color-btn').forEach(btn => {
             const btnColor = btn.dataset.color;
-            const isAssignedToOther = assignedColors[btnColor] && assignedColors[btnColor] !== dir;
-            
-            if (isAssignedToOther) {
-                btn.disabled = true;
-                btn.style.opacity = '0.3';
-                btn.style.cursor = 'not-allowed';
-            } else {
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                btn.style.cursor = 'pointer';
-            }
+            const isAssignedToOther = assigned[btnColor] && assigned[btnColor] !== dir;
+            btn.disabled = !!isAssignedToOther;
+            btn.style.opacity = isAssignedToOther ? '0.3' : '1';
+            btn.style.cursor = isAssignedToOther ? 'not-allowed' : 'pointer';
         });
     });
 }
 
 function updateNumberButtons() {
-    // Get all assigned numbers
-    const assignedNumbers = {};
-    COLORS.forEach(color => {
-        const number = document.getElementById(color).value;
-        if (number) {
-            assignedNumbers[number] = color;
-        }
+    const assignedNums = {};
+    COLORS.forEach(col => {
+        const el = document.getElementById(col);
+        const v = el ? el.value : '';
+        if (v) assignedNums[v] = col;
     });
-
-    // Update all number buttons
-    COLORS.forEach(color => {
-        const currentNumber = document.getElementById(color).value;
-        const numberButtons = document.querySelectorAll(`#${color}-pick .number-btn`);
-        
-        numberButtons.forEach(btn => {
-            const btnValue = btn.dataset.value;
-            const isAssignedToOther = assignedNumbers[btnValue] && assignedNumbers[btnValue] !== color;
-            
-            if (isAssignedToOther) {
-                btn.disabled = true;
-                btn.style.opacity = '0.3';
-                btn.style.cursor = 'not-allowed';
-            } else {
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                btn.style.cursor = 'pointer';
-            }
+    COLORS.forEach(col => {
+        const container = document.getElementById(`${col}-pick`);
+        if (!container) return;
+        container.querySelectorAll('.number-btn').forEach(btn => {
+            const val = btn.dataset.value;
+            const isAssignedToOther = assignedNums[val] && assignedNums[val] !== col;
+            btn.disabled = !!isAssignedToOther;
+            btn.style.opacity = isAssignedToOther ? '0.3' : '1';
+            btn.style.cursor = isAssignedToOther ? 'not-allowed' : 'pointer';
         });
     });
 }
 
-function updatePossibleCombinations() {
-    // Get current constraints
-    const directionColors = {
-        'North': document.getElementById("north").value,
-        'West': document.getElementById("west").value,
-        'East': document.getElementById("east").value,
-        'South': document.getElementById("south").value
-    };
-    
-    const colorNumbers = {
-        'red': parseInt(document.getElementById("red").value),
-        'blue': parseInt(document.getElementById("blue").value),
-        'green': parseInt(document.getElementById("green").value),
-        'black': parseInt(document.getElementById("black").value)
-    };
-    
-    // Build a map of which colors are assigned to which directions
-    const colorToDirection = {}; // color -> direction
-    for (const [dir, color] of Object.entries(directionColors)) {
-        if (color) {
-            colorToDirection[color] = dir;
-        }
-    }
-    
-    // Build constraints: which position (1-4) must have which direction
-    const positionConstraints = {}; // position -> direction
-    
-    // Build exclusion constraints: which direction cannot be at which position
-    // based on color mismatches
-    const exclusions = {}; // direction -> Set of positions it cannot be at
-    
-    for (const dir of DIRECTIONS) {
-        exclusions[dir] = new Set();
-    }
-    
-    // First pass: exact matches (direction has color AND that color has a number)
-    for (const [dir, dirColor] of Object.entries(directionColors)) {
-        if (dirColor && !isNaN(colorNumbers[dirColor])) {
-            const position = colorNumbers[dirColor];
-            positionConstraints[position] = dir;
-        }
-    }
-    
-    // Second pass: exclusions based on color-position mismatch
-    // If a direction has a color, it cannot be at positions assigned to other colors
-    for (const [dir, dirColor] of Object.entries(directionColors)) {
-        if (dirColor) {
-            // For each color that has a number assigned
-            for (const [color, position] of Object.entries(colorNumbers)) {
-                if (!isNaN(position) && color !== dirColor) {
-                    // This direction cannot be at this position
-                    // because the direction is dirColor, not color
-                    exclusions[dir].add(position);
-                }
-            }
-        }
-    }
-    
-    // Third pass: color uniqueness constraint
-    // If a color is assigned to a direction, no other direction can have that color
-    // This means: if North is red, then West/East/South cannot be at the position where red goes
-    for (const [color, assignedDir] of Object.entries(colorToDirection)) {
-        const position = colorNumbers[color];
-        if (!isNaN(position)) {
-            // All other directions cannot be at this position
-            for (const dir of DIRECTIONS) {
-                if (dir !== assignedDir) {
-                    exclusions[dir].add(position);
-                }
-            }
-        }
-    }
-    
-    // Generate all valid permutations
-    const validPerms = permutations(DIRECTIONS).filter(perm => {
-        // Check if this permutation satisfies all constraints
-        for (const [pos, dir] of Object.entries(positionConstraints)) {
-            if (perm[pos - 1] !== dir) {
-                return false;
-            }
-        }
-        
-        // Check exclusions: make sure no direction is at an excluded position
-        for (let i = 0; i < perm.length; i++) {
-            const dir = perm[i];
-            const position = i + 1; // positions are 1-indexed
-            if (exclusions[dir].has(position)) {
-                return false;
-            }
-        }
-        
-        return true;
-    });
-    
-    // Sort by preferred order: North first, then West, then South, then East
-    const directionPriority = { 'North': 0, 'West': 1, 'South': 2, 'East': 3 };
-    
-    validPerms.sort((a, b) => {
-        // Compare each position from left to right
-        for (let i = 0; i < a.length; i++) {
-            const priorityA = directionPriority[a[i]];
-            const priorityB = directionPriority[b[i]];
-            
-            if (priorityA !== priorityB) {
-                return priorityA - priorityB;
-            }
-        }
-        return 0;
-    });
-    
-    // Update probability display
-    const probDisplay = document.getElementById("probDisplay");
-    const n = validPerms.length;
-    if (n > 0) {
-        probDisplay.textContent = `1/${n} (${(100 / n).toFixed(2)}%)`;
-    } else {
-        probDisplay.textContent = "–";
-    }
-    
-    // Update combo grid
-    const grid = document.getElementById("comboGrid");
-    grid.innerHTML = "";
-    
-    if (validPerms.length === 0) {
-        const div = document.createElement("div");
-        div.className = "combo-pill";
-        div.style.color = "#ff4444";
-        div.textContent = "No valid combinations!";
-        grid.appendChild(div);
-    } else {
-        validPerms.forEach(perm => {
-            const div = document.createElement("div");
-            div.className = "combo-pill";
-            div.innerHTML = perm.map(dir => `<span class="dir">${dir}</span>`).join(" ➡ ");
-            grid.appendChild(div);
-        });
-    }
+function calculateTileOrder() {
+    updateResultOrder();
+    updatePossibleCombinations();
 }
 
-function permutations(arr) {
-    const result = [];
-    const used = Array(arr.length).fill(false);
-    const current = [];
-    
-    function backtrack() {
-        if (current.length === arr.length) {
-            result.push(current.slice());
-            return;
-        }
-        
-        for (let i = 0; i < arr.length; i++) {
-            if (used[i]) continue;
-            
-            used[i] = true;
-            current.push(arr[i]);
-            backtrack();
-            current.pop();
-            used[i] = false;
-        }
-    }
-    
-    backtrack();
-    return result;
-}
-
-function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".color-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
+function setupControls() {
+    document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
             if (btn.disabled) return;
-            
-            const dir = btn.closest(".color-pick").id.replace("-pick", "");
+            const container = btn.closest('.color-pick');
+            if (!container) return;
+            const dir = container.id.replace('-pick', '');
             const color = btn.dataset.color;
             const input = document.getElementById(dir);
-            const current = input.value;
             const img = document.getElementById(`${dir}-symbol`);
-
-            if (current === color) {
-                input.value = "";
-                btn.classList.remove("selected");
-                btn.parentElement.querySelectorAll(".color-btn").forEach(b => b.classList.remove("selected"));
-
-                if (img) img.style.backgroundColor = "black";
+            if (!input) return;
+            if (input.value === color) {
+                input.value = '';
+                container.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+                if (img) img.style.backgroundColor = 'transparent';
             } else {
                 input.value = color;
-                btn.parentElement.querySelectorAll(".color-btn").forEach(b => b.classList.remove("selected"));
-                btn.classList.add("selected");
-                if (img)
-                    img.style.backgroundColor = getComputedStyle(btn).backgroundColor;
+                container.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                if (img) img.style.backgroundColor = getComputedStyle(btn).backgroundColor;
             }
-
             updateColorButtons();
             calculateTileOrder();
         });
     });
 
-    document.querySelectorAll(".number-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
+    document.querySelectorAll('.number-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
             if (btn.disabled) return;
-            
             const color = btn.dataset.color;
-            const current = document.getElementById(color).value;
             const value = btn.dataset.value;
-
-            if (current === value) {
-                document.getElementById(color).value = "";
-                btn.classList.remove("selected");
+            const input = document.getElementById(color);
+            if (!input) return;
+            if (input.value === value) {
+                input.value = '';
+                btn.classList.remove('selected');
             } else {
-                document.getElementById(color).value = value;
-                btn.parentElement.querySelectorAll(".number-btn").forEach(b => b.classList.remove("selected"));
-                btn.classList.add("selected");
+                input.value = value;
+                btn.parentElement.querySelectorAll('.number-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
             }
-
             updateNumberButtons();
             calculateTileOrder();
-        })
-    })
-    
-    // Initialize
+        });
+    });
+
+    document.querySelectorAll('.color-pick, .number-pick').forEach(container => {
+        container.addEventListener('dblclick', () => {
+            const hid = container.querySelector('input[type="hidden"]');
+            if (!hid) return;
+            hid.value = '';
+            container.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+            updateColorButtons();
+            updateNumberButtons();
+            calculateTileOrder();
+        });
+    });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    setupControls();
     updateColorButtons();
     updateNumberButtons();
-    updatePossibleCombinations();
+    calculateTileOrder();
 });
-
-(function () {
-    function onReady() { document.body.classList.add('ready'); }
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', onReady);
-    } else {
-        onReady();
-    }
-})();
