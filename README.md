@@ -20,10 +20,9 @@ https://krule6.github.io/BO2-EE-Resources/
 
 - A simple and interactive Mahjong Tile Solver.
 
-- Translates the Mahjong Tiles to the corresponding direction/number
-  
-- The tool computes the correct order for the Mahjong Tiles by selecting the color for the number & direction of the tiles
-<img src="assets/dierise.png" alt="dierise" width="600">
+- Interactive tracker to record the mahjong tiles corresponding direction/number and see possible combinations
+
+<img src="assets/dierise1.png" alt="dierise" width="600">
 
 
 ### Buried - Ciphers, Mazes & Switch Tracker
