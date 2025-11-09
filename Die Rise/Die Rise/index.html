@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Die Rise - Mahjong Tile Solver</title>
@@ -11,115 +12,127 @@
     <div class="image-box">
         <img src="./assets/mahjong.png" alt="Mahjong Tiles" />
     </div>
-    <div class="form-container">
-        <div class="form-column">
-            <h2>
-                <img src="./assets/directions.png" alt="icon"
-                    style="border: 3px solid #ffcc00; border-radius: 8px; height: 50px; vertical-align: middle; margin-right: 1px;">
-            </h2>
-            <div>
-                <div class="color-pick" id="north-pick">
-                    <span class="color-label">North:</span>
-                    <img id="north-symbol" class="direction-icon" src="./assets/north.png" alt="" />
-                    <div class="color-buttons">
-                        <button class="color-btn red" data-color="red" data-dir="north"></button>
-                        <button class="color-btn blue" data-color="blue" data-dir="north"></button>
-                        <button class="color-btn green" data-color="green" data-dir="north"></button>
-                        <button class="color-btn black" data-color="black" data-dir="north"></button>
-                        <input type="hidden" id="north">
+    <div class="main-content-wrapper">
+        <div class="left-column">
+            <div class="form-container">
+                <div class="form-column">
+                    <h2>
+                        <img src="./assets/directions.png" alt="icon"
+                            style="border: 3px solid #ffcc00; border-radius: 8px; height: 50px; vertical-align: middle; margin-right: 1px;">
+                    </h2>
+                    <div>
+                        <div class="color-pick" id="north-pick">
+                            <span class="color-label">North:</span>
+                            <img id="north-symbol" class="direction-icon" src="./assets/north.png" alt="" />
+                            <div class="color-buttons">
+                                <button class="color-btn red" data-color="red" data-dir="north"></button>
+                                <button class="color-btn blue" data-color="blue" data-dir="north"></button>
+                                <button class="color-btn green" data-color="green" data-dir="north"></button>
+                                <button class="color-btn black" data-color="black" data-dir="north"></button>
+                                <input type="hidden" id="north">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="color-pick" id="west-pick">
+                            <span class="color-label">West:</span>
+                            <img id="west-symbol" class="direction-icon" src="./assets/west.png" alt="" />
+                            <div class="color-buttons">
+                                <button class="color-btn red" data-color="red" data-dir="west"></button>
+                                <button class="color-btn blue" data-color="blue" data-dir="west"></button>
+                                <button class="color-btn green" data-color="green" data-dir="west"></button>
+                                <button class="color-btn black" data-color="black" data-dir="west"></button>
+                                <input type="hidden" id="west">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="color-pick" id="east-pick">
+                            <span class="color-label">East:</span>
+                            <img id="east-symbol" class="direction-icon" src="./assets/east.png" alt="" />
+                            <div class="color-buttons">
+                                <button class="color-btn red" data-color="red" data-dir="east"></button>
+                                <button class="color-btn blue" data-color="blue" data-dir="east"></button>
+                                <button class="color-btn green" data-color="green" data-dir="east"></button>
+                                <button class="color-btn black" data-color="black" data-dir="east"></button>
+                                <input type="hidden" id="east">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="color-pick" id="south-pick">
+                            <span class="color-label">South:</span>
+                            <img id="south-symbol" class="direction-icon" src="./assets/south.png" alt="" />
+                            <div class="color-buttons">
+                                <button class="color-btn red" data-color="red" data-dir="south"></button>
+                                <button class="color-btn blue" data-color="blue" data-dir="south"></button>
+                                <button class="color-btn green" data-color="green" data-dir="south"></button>
+                                <button class="color-btn black" data-color="black" data-dir="south"></button>
+                                <input type="hidden" id="south">
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div>
-                <div class="color-pick" id="west-pick">
-                    <span class="color-label">West:</span>
-                    <img id="west-symbol" class="direction-icon" src="./assets/west.png" alt="" />
-                    <div class="color-buttons">
-                        <button class="color-btn red" data-color="red" data-dir="west"></button>
-                        <button class="color-btn blue" data-color="blue" data-dir="west"></button>
-                        <button class="color-btn green" data-color="green" data-dir="west"></button>
-                        <button class="color-btn black" data-color="black" data-dir="west"></button>
-                        <input type="hidden" id="west">
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="color-pick" id="east-pick">
-                    <span class="color-label">East:</span>
-                    <img id="east-symbol" class="direction-icon" src="./assets/east.png" alt="" />
-                    <div class="color-buttons">
-                        <button class="color-btn red" data-color="red" data-dir="east"></button>
-                        <button class="color-btn blue" data-color="blue" data-dir="east"></button>
-                        <button class="color-btn green" data-color="green" data-dir="east"></button>
-                        <button class="color-btn black" data-color="black" data-dir="east"></button>
-                        <input type="hidden" id="east">
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="color-pick" id="south-pick">
-                    <span class="color-label">South:</span>
-                    <img id="south-symbol" class="direction-icon" src="./assets/south.png" alt="" />
-                    <div class="color-buttons">
-                        <button class="color-btn red" data-color="red" data-dir="south"></button>
-                        <button class="color-btn blue" data-color="blue" data-dir="south"></button>
-                        <button class="color-btn green" data-color="green" data-dir="south"></button>
-                        <button class="color-btn black" data-color="black" data-dir="south"></button>
-                        <input type="hidden" id="south">
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="form-column">
-            <h2>
-                <img src="./assets/numbers.png" alt="icon"
-                    style="border: 3px solid #ffcc00; border-radius: 8px; height: 50px; vertical-align: middle; margin-right: 1px;">
-            </h2>
-            <div class="number-pick" id="red-pick">
-                <span class="number-label">Red:</span>
-                <div class="number-buttons">
-                    <button class="number-btn red" data-value="1" data-color="red">1</button>
-                    <button class="number-btn red" data-value="2" data-color="red">2</button>
-                    <button class="number-btn red" data-value="3" data-color="red">3</button>
-                    <button class="number-btn red" data-value="4" data-color="red">4</button>
+                <div class="form-column">
+                    <h2>
+                        <img src="./assets/numbers.png" alt="icon"
+                            style="border: 3px solid #ffcc00; border-radius: 8px; height: 50px; vertical-align: middle; margin-right: 1px;">
+                    </h2>
+                    <div class="number-pick" id="red-pick">
+                        <span class="number-label">Red:</span>
+                        <div class="number-buttons">
+                            <button class="number-btn red" data-value="1" data-color="red">1</button>
+                            <button class="number-btn red" data-value="2" data-color="red">2</button>
+                            <button class="number-btn red" data-value="3" data-color="red">3</button>
+                            <button class="number-btn red" data-value="4" data-color="red">4</button>
+                        </div>
+                        <input type="hidden" id="red" value="">
+                    </div>
+                    <div class="number-pick" id="blue-pick">
+                        <span class="number-label">Blue:</span>
+                        <div class="number-buttons">
+                            <button class="number-btn blue" data-value="1" data-color="blue">1</button>
+                            <button class="number-btn blue" data-value="2" data-color="blue">2</button>
+                            <button class="number-btn blue" data-value="3" data-color="blue">3</button>
+                            <button class="number-btn blue" data-value="4" data-color="blue">4</button>
+                        </div>
+                        <input type="hidden" id="blue" value="">
+                    </div>
+                    <div class="number-pick" id="green-pick">
+                        <span class="number-label">Green:</span>
+                        <div class="number-buttons">
+                            <button class="number-btn green" data-value="1" data-color="green">1</button>
+                            <button class="number-btn green" data-value="2" data-color="green">2</button>
+                            <button class="number-btn green" data-value="3" data-color="green">3</button>
+                            <button class="number-btn green" data-value="4" data-color="green">4</button>
+                        </div>
+                        <input type="hidden" id="green" value="">
+                    </div>
+                    <div class="number-pick" id="black-pick">
+                        <span class="number-label">Black:</span>
+                        <div class="number-buttons">
+                            <button class="number-btn black" data-value="1" data-color="black">1</button>
+                            <button class="number-btn black" data-value="2" data-color="black">2</button>
+                            <button class="number-btn black" data-value="3" data-color="black">3</button>
+                            <button class="number-btn black" data-value="4" data-color="black">4</button>
+                        </div>
+                        <input type="hidden" id="black" value="">
+                    </div>
                 </div>
-                <input type="hidden" id="red" value="">
             </div>
-            <div class="number-pick" id="blue-pick">
-                <span class="number-label">Blue:</span>
-                <div class="number-buttons">
-                    <button class="number-btn blue" data-value="1" data-color="blue">1</button>
-                    <button class="number-btn blue" data-value="2" data-color="blue">2</button>
-                    <button class="number-btn blue" data-value="3" data-color="blue">3</button>
-                    <button class="number-btn blue" data-value="4" data-color="blue">4</button>
-                </div>
-                <input type="hidden" id="blue" value="">
-            </div>
-            <div class="number-pick" id="green-pick">
-                <span class="number-label">Green:</span>
-                <div class="number-buttons">
-                    <button class="number-btn green" data-value="1" data-color="green">1</button>
-                    <button class="number-btn green" data-value="2" data-color="green">2</button>
-                    <button class="number-btn green" data-value="3" data-color="green">3</button>
-                    <button class="number-btn green" data-value="4" data-color="green">4</button>
-                </div>
-                <input type="hidden" id="green" value="">
-            </div>
-            <div class="number-pick" id="black-pick">
-                <span class="number-label">Black:</span>
-                <div class="number-buttons">
-                    <button class="number-btn black" data-value="1" data-color="black">1</button>
-                    <button class="number-btn black" data-value="2" data-color="black">2</button>
-                    <button class="number-btn black" data-value="3" data-color="black">3</button>
-                    <button class="number-btn black" data-value="4" data-color="black">4</button>
-                </div>
-                <input type="hidden" id="black" value="">
-            </div>
+            <div id="result"></div>
+        </div>
+        
+        <div class="possibles-section">
+            <h2>Possible Combinations</h2>
+            <h3>Odds: <span id="probDisplay" class="prob">–</span></h3>
+            <div id="comboGrid" class="combo-grid"></div>
         </div>
     </div>
-    <div id="result"></div>
 
     <script src="main.js"></script>
 
 </body>
+
+</html>

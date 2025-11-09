@@ -15,21 +15,39 @@ body {
 .direction-icon {
     height: 30px;
     width: 30px;
-    border: 2px solid #ffcc00;
+    border: 1px solid var(--panel-border);
     border-radius: 4px;
-    background-color: black;
+}
+
+/* Main content wrapper för att placera formulär och kombinationer bredvid varandra */
+.main-content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: fit-content;
 }
 
 .form-container {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     gap: 40px;
     flex-wrap: wrap;
     background-color: rgba(0, 0, 0, 0.6);
     padding: 30px;
     border-radius: 15px;
-    max-width: 800px;
-    margin: auto;
+    border: 1px solid var(--gr);
+    width: fit-content;
+    margin: 0;
 }
 
 .form-column {
@@ -51,7 +69,7 @@ body {
 .image-box img {
     width: 420px;
     border-radius: 10px;
-    border: 2px solid #ffcc00;
+    border: 3px solid var(--gr);
 }
 
 h2 {
@@ -76,18 +94,16 @@ input {
 }
 
 #result {
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.6);
     font-size: 22px;
     font-weight: bold;
     color: #ffcc00;
     border-radius: 10px;
-    margin-top: 30px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0;
     padding: 12px;
     box-shadow: 0 0 10px #000;
-
+    border: 1px solid var(--gr);
+    text-align: center;
 }
 
 .number-pick {
@@ -130,7 +146,7 @@ input {
 .color-btn,
 .number-btn {
     background-color: #333;
-    color: white;
+    color: rgb(255, 255, 255);
     border: 2px solid #000000;
     width: 25px;
     height: 25px;
@@ -140,23 +156,23 @@ input {
     border-radius: 50%;
     cursor: pointer;
     align-items: center;
-
 }
 
+/* Färger samma som Buried */
 .color-btn.red {
-    background-color: #d51c1c;
+    background-color: #ff7e7e;
 }
 
 .color-btn.blue {
-    background-color: #0066ff;
+    background-color: #7fb0ff;
 }
 
 .color-btn.green {
-    background-color: #23e830;
+    background-color: #66e897;
 }
 
 .color-btn.black {
-    background-color: #232323;
+    background-color: #2f2f2f;
 }
 
 .color-btn.selected {
@@ -165,23 +181,42 @@ input {
 }
 
 .number-btn.red {
-    background-color: #d51c1c;
-    color: white;
+    background-color: #ff7e7e;
 }
 
 .number-btn.blue {
-    background-color: #0066ff;
-    color: white;
+    background-color: #7fb0ff;
 }
 
 .number-btn.green {
-    background-color: #23e830;
-    color: white;
+    background-color: #66e897;
 }
 
 .number-btn.black {
-    background-color: #232323;
-    color: white;
+    background-color: #3f3f3f;
+}
+
+/* Färger samma som Buried */
+.color-btn.red {
+    background-color: #ff7e7e;
+}
+
+.color-btn.blue {
+    background-color: #7fb0ff;
+}
+
+.color-btn.green {
+    background-color: #66e897;
+}
+
+.color-btn.black {
+    background-color: #343434;
+    border-color: #000000;
+}
+
+.color-btn.selected {
+    outline: 2px solid #ffcc00;
+    transform: scale(1.1);
 }
 
 .number-btn.selected {
@@ -189,8 +224,75 @@ input {
     transform: scale(1.1);
 }
 
-.footer {
+/* Possible Combinations Section */
+.possibles-section {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    border: 1px solid var(--gr);
+    padding: 20px;
+    margin: 0;
+    width: 400px;
+    max-width: 400px;
+}
 
+.possibles-section h2 {
+    color: #e8e8e8;
+    font-size: 24px;
+    margin: 0 0 10px 0;
+}
+
+.possibles-section h3 {
+    color: var(--gold);
+    font-size: 18px;
+    margin: 0 0 15px 0;
+}
+
+.prob {
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.combo-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.combo-pill {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    color: #ffcc00;
+    text-align: center;
+}
+
+.combo-pill .dir {
+    font-weight: bold;
+    color: #ffcc00;
+}
+
+/* Färger för riktningar i combo-pill baserat på deras färg */
+.combo-pill .dir.red {
+    color: #ff7e7e;
+}
+
+.combo-pill .dir.blue {
+    color: #7fb0ff;
+}
+
+.combo-pill .dir.green {
+    color: #66e897;
+}
+
+.combo-pill .dir.black {
+    color: #ffffff;
+}
+
+.footer {
     text-align: center;
     margin-top: 100px;
     margin-bottom: 20px;
@@ -208,5 +310,15 @@ input {
     text-decoration: none;
 }
 
+/* Responsiv design */
+@media (max-width: 1200px) {
+    .main-content-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
 
-
+    .possibles-section {
+        width: 100%;
+        max-width: 600px;
+    }
+}
