@@ -1,31 +1,33 @@
-const PYLON_ATTEMPTS = 3;
+const PYLON_ATTEMPTS = 3; //pylon allows 3 attempts per round
 const DIRS = ['north', 'west', 'east', 'south'];
 const DIR_LABEL = { north: 'N', west: 'W', east: 'E', south: 'S' };
 const COLORS = ['red', 'blue', 'green', 'black'];
 
 // permutations (24)
 function permutations(arr) {
-    const res = [];
+    const permutations = [];
     const used = Array(arr.length).fill(false);
-    const cur = [];
+    const current = [];
     (function backtrack() {
-        if (cur.length === arr.length) {
-            res.push(cur.slice());
+        if (current.length === arr.length) {
+            permutations.push(current.slice());
             return;
         }
         for (let i = 0; i < arr.length; i++) {
             if (used[i]) continue;
             used[i] = true;
-            cur.push(arr[i]);
+            current.push(arr[i]);
             backtrack();
-            cur.pop();
+            current.pop();
             used[i] = false;
         }
     })();
-    return res;
+    return permutations;
 }
 
-function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 function readState() {
     const directionColors = {};
@@ -52,28 +54,35 @@ function permutationIsValid(perm, state) {
 
     for (const color of COLORS) {
         const pos = colorNumbers[color];
-        if (!Number.isInteger(pos)) continue;
+        if (!Number.isInteger(pos))
+            continue;
         const dirAtPos = perm[pos - 1];
         if (colorToDirection[color]) {
-            if (colorToDirection[color] !== dirAtPos) return false;
+            if (colorToDirection[color] !== dirAtPos)
+                return false;
         } else {
             const dirColor = directionColors[dirAtPos];
-            if (dirColor && dirColor !== color) return false;
+            if (dirColor && dirColor !== color)
+                return false;
         }
     }
 
     for (const dir of DIRS) {
         const dirColor = directionColors[dir];
-        if (!dirColor) continue;
+        if (!dirColor)
+            continue;
         const num = colorNumbers[dirColor];
-        if (Number.isInteger(num) && perm[num - 1] !== dir) return false;
+        if (Number.isInteger(num) && perm[num - 1] !== dir)
+            return false;
     }
 
     const seen = {};
     for (const dir of DIRS) {
         const c = directionColors[dir];
-        if (!c) continue;
-        if (seen[c] && seen[c] !== dir) return false;
+        if (!c)
+            continue;
+        if (seen[c] && seen[c] !== dir)
+            return false;
         seen[c] = dir;
     }
 
@@ -143,7 +152,6 @@ function updatePossibleCombinations() {
         return key.split('').map(ch => letterToDir[ch]);
     }
 
-    // Group permutations by canonical rotation so all rotational equivalents (0..3 shifts)
     // are considered the same group. This ensures patterns like WSEN and ENWS end up
     // in the same grouping regardless of which rotation appears first.
     function permToKeyLetters(perm) {
@@ -154,8 +162,6 @@ function updatePossibleCombinations() {
         return key.slice(k) + key.slice(0, k);
     }
 
-    // compute canonical (lexicographically smallest) rotation of a 4-letter key
-    // Consider ALL 4 rotations to find the canonical key that represents the circular pattern
     function canonicalRotation(key) {
         let best = key;
         for (let i = 1; i < 4; i++) {
@@ -165,26 +171,23 @@ function updatePossibleCombinations() {
         return best;
     }
 
-    // Build map canonicalKey -> list of perms (arrays) that are valid and respect fixedPos
-    // With 24 total permutations and groups of 3, we need 8 groups to show all combinations.
+    // With 24 total permutations and groups of 3, 8 groups to show all combinations.
     // Each group represents 3 consecutive rotations you can try in one round.
-    // Starting from different rotations of the same circular pattern creates different groups.
     const groups = [];
-    const processedAsGroup = new Set(); // Track which 3-rotation sequences we've shown
-    
+    const processedAsGroup = new Set();
+
     for (const perm of validPerms) {
         // Generate the 3-rotation group starting from this perm
         const groupPerms = [];
         let groupRespectsFix = false;
-        
+
         for (let shift = 0; shift < 3; shift++) {
             const rotatedPerm = rotateLeft(perm, shift);
             const rotatedSerial = serial(rotatedPerm);
-            
+
             if (validSet.has(rotatedSerial)) {
                 groupPerms.push(rotatedPerm);
-                
-                // Check if this rotation respects fixedPos
+
                 let rotOk = true;
                 for (const posStr in fixedPos) {
                     const pos = parseInt(posStr, 10);
@@ -193,12 +196,11 @@ function updatePossibleCombinations() {
                 if (rotOk) groupRespectsFix = true;
             }
         }
-        
-        // Create a unique key for this group (sorted to avoid duplicates of same 3 perms)
+
         const groupKey = groupPerms.map(p => serial(p)).sort().join('||');
-        
+
         // Only add if we haven't seen this exact group before and it respects fixedPos
-        if (groupPerms.length > 0 && 
+        if (groupPerms.length > 0 &&
             !processedAsGroup.has(groupKey) &&
             (Object.keys(fixedPos).length === 0 || groupRespectsFix)) {
             groups.push(groupPerms);
@@ -218,14 +220,12 @@ function updatePossibleCombinations() {
         fallback.forEach(p => groups.push([p]));
     }
 
-    // If user provided any direction-color or any color-number input, dedupe duplicates across groups
     const hasDirectionColor = Object.values(state.directionColors).some(v => !!v);
     const hasColorNumber = Object.values(state.colorNumbers).some(v => Number.isInteger(v));
     const dedupeAcrossGroups = hasDirectionColor || hasColorNumber;
 
     const emitted = new Set();
 
-    // compute available distinct rotation-tries per group (max group length)
     const maxGroupSize = groups.reduce((max, g) => Math.max(max, g.length), 0);
     const availableDistinct = Math.min(PYLON_ATTEMPTS, maxGroupSize);
 
@@ -237,28 +237,26 @@ function updatePossibleCombinations() {
         probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} codes per round: ${combinedPct.toFixed(2)}%`;
     }
 
-    // Sort groups by size (largest first) so groups with more combinations appear at the top
-    // This helps prioritize groups with higher success probability
     groups.sort((a, b) => b.length - a.length);
 
-    // First pass: collect all items to show per group (accounting for deduplication)
     const groupsToRender = [];
     groups.forEach((group) => {
         const itemsToShow = [];
-        
+
         group.forEach(perm => {
             const s = serial(perm);
-            if (dedupeAcrossGroups && emitted.has(s)) return; // skip duplicate when fixed info exists
-            
+            if (dedupeAcrossGroups && emitted.has(s))
+                return; // skip duplicate when fixed info exists
+
             itemsToShow.push(perm);
             if (dedupeAcrossGroups) emitted.add(s);
         });
-        
+
         if (itemsToShow.length > 0) {
             groupsToRender.push(itemsToShow);
         }
     });
-    
+
     // Sort the collected groups by their actual size (after deduplication)
     groupsToRender.sort((a, b) => b.length - a.length);
 
@@ -267,7 +265,7 @@ function updatePossibleCombinations() {
     groupsToRender.forEach((itemsToShow) => {
         const groupContainer = document.createElement('div');
         groupContainer.className = 'combo-group';
-        
+
         // If group has 2+ items, show them in a groupContainer
         // If group has only 1 item, show it directly without grouping box
         if (itemsToShow.length >= 2) {
@@ -303,6 +301,7 @@ function updateColorButtons() {
         const c = el ? el.value : '';
         if (c) assigned[c] = dir;
     });
+
     DIRS.forEach(dir => {
         const container = document.getElementById(`${dir}-pick`);
         if (!container) return;
@@ -311,7 +310,7 @@ function updateColorButtons() {
             const isAssignedToOther = assigned[btnColor] && assigned[btnColor] !== dir;
             btn.disabled = !!isAssignedToOther;
             btn.style.opacity = isAssignedToOther ? '0.3' : '1';
-            btn.style.cursor = isAssignedToOther ? 'not-allowed' : 'pointer';
+            btn.style.currentsor = isAssignedToOther ? 'not-allowed' : 'pointer';
         });
     });
 }
@@ -331,7 +330,7 @@ function updateNumberButtons() {
             const isAssignedToOther = assignedNums[val] && assignedNums[val] !== col;
             btn.disabled = !!isAssignedToOther;
             btn.style.opacity = isAssignedToOther ? '0.3' : '1';
-            btn.style.cursor = isAssignedToOther ? 'not-allowed' : 'pointer';
+            btn.style.currentsor = isAssignedToOther ? 'not-allowed' : 'pointer';
         });
     });
 }
@@ -344,14 +343,17 @@ function calculateTileOrder() {
 function setupControls() {
     document.querySelectorAll('.color-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            if (btn.disabled) return;
+            if (btn.disabled)
+                return;
             const container = btn.closest('.color-pick');
-            if (!container) return;
+            if (!container)
+                return;
             const dir = container.id.replace('-pick', '');
             const color = btn.dataset.color;
             const input = document.getElementById(dir);
             const img = document.getElementById(`${dir}-symbol`);
-            if (!input) return;
+            if (!input)
+                return;
             if (input.value === color) {
                 input.value = '';
                 container.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
@@ -360,7 +362,8 @@ function setupControls() {
                 input.value = color;
                 container.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-                if (img) img.style.backgroundColor = getComputedStyle(btn).backgroundColor;
+                if (img)
+                    img.style.backgroundColor = getComputedStyle(btn).backgroundColor;
             }
             updateColorButtons();
             calculateTileOrder();
@@ -369,11 +372,13 @@ function setupControls() {
 
     document.querySelectorAll('.number-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            if (btn.disabled) return;
+            if (btn.disabled)
+                return;
             const color = btn.dataset.color;
             const value = btn.dataset.value;
             const input = document.getElementById(color);
-            if (!input) return;
+            if (!input)
+                return;
             if (input.value === value) {
                 input.value = '';
                 btn.classList.remove('selected');
@@ -390,7 +395,8 @@ function setupControls() {
     document.querySelectorAll('.color-pick, .number-pick').forEach(container => {
         container.addEventListener('dblclick', () => {
             const hid = container.querySelector('input[type="hidden"]');
-            if (!hid) return;
+            if (!hid)
+                return;
             hid.value = '';
             container.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
             updateColorButtons();
