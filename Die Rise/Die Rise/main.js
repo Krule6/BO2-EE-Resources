@@ -232,9 +232,9 @@ function updatePossibleCombinations() {
     const perTryPct = (100 / n);
     const combinedPct = Math.min(100, (availableDistinct / n) * 100);
     if (availableDistinct === PYLON_ATTEMPTS) {
-        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} codes per round: ${combinedPct.toFixed(2)}%`;
+        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} codes per round: 1/${n / 4} (${combinedPct.toFixed(2)}%)`;
     } else {
-        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} codes per round: ${combinedPct.toFixed(2)}%`;
+        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} codes per round: 1/${n / 2} (${combinedPct.toFixed(2)}%)`;
     }
 
     groups.sort((a, b) => b.length - a.length);

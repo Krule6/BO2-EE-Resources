@@ -224,7 +224,7 @@ input {
 .possibles-section {
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 15px;
-    border: 1px solid var(--gr);
+    border: 2px solid var(--gr);
     padding: 20px;
     margin: 0;
     width: 400px;
@@ -257,8 +257,8 @@ input {
 }
 
 .combo-group {
-    background-color: rgba(255, 204, 0, 0.08);
-    border: 2px solid rgba(255, 204, 0, 0.3);
+    background-color: rgba(22, 22, 17, 0.355);
+    border: 2px solid var(--gr);
     border-radius: 12px;
     padding: 12px;
     display: flex;
@@ -356,5 +356,7 @@ p {
     font-style: italic;
     font-weight: 300;
     text-align: start;
-    color: #fff5ac;
+    color: #fffbdc;
+    margin: 20px;
+
 }
