@@ -19,7 +19,6 @@ body {
     border-radius: 4px;
 }
 
-/* Main content wrapper för att placera formulär och kombinationer bredvid varandra */
 .main-content-wrapper {
     display: flex;
     justify-content: center;
@@ -158,7 +157,6 @@ input {
     align-items: center;
 }
 
-/* Färger samma som Buried */
 .color-btn.red {
     background-color: #ff7e7e;
 }
@@ -196,7 +194,6 @@ input {
     background-color: #3f3f3f;
 }
 
-/* Färger samma som Buried */
 .color-btn.red {
     background-color: #ff7e7e;
 }
@@ -224,7 +221,6 @@ input {
     transform: scale(1.1);
 }
 
-/* Possible Combinations Section */
 .possibles-section {
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 15px;
@@ -285,7 +281,6 @@ input {
     color: #ffcc00;
 }
 
-/* Färger för riktningar i combo-pill baserat på deras färg */
 .combo-pill .dir.red {
     color: #ff7e7e;
 }
@@ -303,7 +298,6 @@ input {
 }
 
 
-/* Responsiv design */
 @media (max-width: 1200px) {
     .main-content-wrapper {
         flex-direction: column;
@@ -333,21 +327,14 @@ input {
     max-width: 420px;
 }
 
-/* Färgvariabler — justera efter behov */
 :root {
-    --p-color: rgb(145, 128, 71)
-    /* mörk blå för h1/h2 */
+    --p-color: rgb(145, 128, 71);
     --h2-color: #ffcc00;
-    /* petrol för h2 */
     --h3-color: #ffcc00;
-    /* varm orange för h3 */
     --h4-color: #ffcc00;
-    /* lila för h4 */
     --n-color: #DC2626;
-    /* röd för <n> eller .n */
 }
 
-/* Headers */
 h1 {
     color: var(--h1-color);
 }
