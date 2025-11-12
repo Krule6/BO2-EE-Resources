@@ -29,7 +29,7 @@ body {
 
 }
 
-#map-img {
+.map-img {
     max-width: 90vw;
     max-height: 80vh;
     width: auto;
@@ -56,50 +56,19 @@ body {
     transition: all 0.2s ease;
 }
 
-.node-marker:focus,
-.node-marker:hover {
-    transform: translate(-50%, -50%) scale(1.25);
-    box-shadow: 0 0 20px var(--gold);
-    border-color: var(--gold);
-    background: var(--gold-weak);
-}
-
 .preview {
     position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: var(--radius);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    width: 500px;
+    height: 500px;
     background-repeat: no-repeat;
-    background-color: #000;
+    background-color: transparent;
     display: none;
     z-index: 40;
     pointer-events: none;
     overflow: hidden;
-    border: 2px solid var(--bc);
-    padding: 2px;
+    padding: 0;
+    background-size: contain;
+    background-position: center center;
+    border-radius: var(--radius);
 }
 
-@media (max-width: 520px) {
-    .preview {
-        width: 200px;
-        height: 200px;
-    }
-
-    .node-marker {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-.node-marker.static {
-    pointer-events: none;
-    transform: translate(-50%, -50%) !important;
-    transition: none !important;
-}
-
-.node-marker.static:hover,
-.node-marker.static:focus {
-    transform: translate(-50%, -50%) !important;
-    box-shadow: 0 0 10px var(--gold-weak) !important;
-}

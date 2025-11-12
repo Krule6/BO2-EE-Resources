@@ -5,14 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const preview = document.getElementById('preview');
 
     const nodes = [
-        { id: 'a', x: 16.3, y: 30.5, label: 'Nacht/Pylon', image: 'assets/nacht.png' },
-        { id: 'b', x: 78, y: 53.2, label: 'Depot', image: 'assets/depot.png' },
-        { id: 'c', x: 21.5, y: 60, label: 'Power', image: 'assets/power.png' },
-        { id: 'd', x: 34, y: 55, label: 'Cabin', image: 'assets/cabin.png' },
-        { id: 'e', x: 76, y: 36.5, label: 'Bridge', image: 'assets/bridge.png' },
-        { id: 'f', x: 56.5, y: 34.6, label: 'Town', image: 'assets/town.png' },
-        { id: 'g', x: 54.5, y: 16, label: 'Midway', image: 'assets/midway.png' },
-        { id: 'h', x: 60.4, y: 10, label: 'Diner', image: 'assets/diner.png' },
+        { id: 'a', x: 16.3, y: 30.5, label: 'Nacht/Pylon', image: 'assets/tpnacht.png' },
+        { id: 'b', x: 78, y: 53.2, label: 'Depot', image: 'assets/tpdepot.png' },
+        { id: 'c', x: 21.5, y: 60, label: 'Power', image: 'assets/tppower.png' },
+        { id: 'd', x: 34, y: 55, label: 'Cabin', image: 'assets/tpcabin.png' },
+        { id: 'e', x: 76, y: 36.5, label: 'Bridge', image: 'assets/tpbridge.png' },
+        { id: 'f', x: 56.5, y: 34.6, label: 'Town', image: 'assets/tptown.png' },
+        { id: 'g', x: 54.5, y: 16, label: 'Midway', image: 'assets/tpmidway.png' },
+        { id: 'h', x: 60.4, y: 10, label: 'Diner', image: 'assets/tpdiner.png' },
         { id: 'i', x: 53.35, y: 81.5, label: 'bleh' },
     ];
 
@@ -45,22 +45,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function showPreview(node, left, top, pxOnImage, pyOnImage, imgRect) {
+    function showPreview(node, left, top) {
         if (!node.image) return;
 
-        preview.style.width = '300px';
-        preview.style.height = '200px';
         preview.style.backgroundImage = `url(${node.image})`;
-        preview.style.backgroundSize = 'cover';
+        preview.style.backgroundSize = 'contain';
         preview.style.backgroundPosition = 'center';
+        preview.style.backgroundRepeat = 'no-repeat';
 
-        const previewSize = 300;
+        const previewW = preview.clientWidth || 500;
+        const previewH = preview.clientHeight || 500;
         const wrapperRect = wrapper.getBoundingClientRect();
-        let previewLeft = left - previewSize / 2;
-        let previewTop = top - previewSize / 2;
 
-        previewLeft = Math.max(4, Math.min(previewLeft, wrapperRect.width - previewSize - 4));
-        previewTop = Math.max(4, Math.min(previewTop, wrapperRect.height - previewSize - 4));
+        let previewLeft = left - previewW / 2;
+        let previewTop = top - previewH / 2;
+
+        previewLeft = Math.max(4, Math.min(previewLeft, wrapperRect.width - previewW - 4));
+        previewTop = Math.max(4, Math.min(previewTop, wrapperRect.height - previewH - 4));
 
         preview.style.left = previewLeft + 'px';
         preview.style.top = previewTop + 'px';
