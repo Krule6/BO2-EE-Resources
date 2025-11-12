@@ -1,4 +1,4 @@
-const PYLON_ATTEMPTS = 3; //pylon allows 3 attempts per round
+const PYLON_ATTEMPTS = 4; //pylon allows 3 attempts per round
 const DIRS = ['north', 'west', 'east', 'south'];
 const DIR_LABEL = { north: 'N', west: 'W', east: 'E', south: 'S' };
 const COLORS = ['red', 'blue', 'green', 'black'];
@@ -181,7 +181,7 @@ function updatePossibleCombinations() {
         const groupPerms = [];
         let groupRespectsFix = false;
 
-        for (let shift = 0; shift < 3; shift++) {
+        for (let shift = 0; shift < 4; shift++) {
             const rotatedPerm = rotateLeft(perm, shift);
             const rotatedSerial = serial(rotatedPerm);
 
