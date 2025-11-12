@@ -35,7 +35,6 @@ listEl.addEventListener("click", (e) => {
     return;
   }
 
-  // spärra/ospärra plats
   if (e.target.classList.contains("x-btn")) {
     const n = Number(e.target.dataset.n);
     state.excludes[color][n] = !state.excludes[color][n];
@@ -90,7 +89,7 @@ function updatePossibleOrders() {
     );
   }
 
-  // giltiga permutationer
+  // valid permutationer
   const perms = permutations(COLORS).filter(p => {
     for (const pos in fixed) {
       if (p[Number(pos)] !== fixed[pos])
