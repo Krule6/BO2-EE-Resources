@@ -29,7 +29,7 @@ https://krule6.github.io/BO2-EE-Resources/
 
 - Good/Bad maze layouts
 
-- Interactive tracker to record you switch hits and see possible combinations
+- Interactive tracker to record correct switch order and see possible combinations
 
 <img src="assets/switch.png" alt="dierise" width="600">
 
