@@ -33,12 +33,12 @@ https://krule6.github.io/BO2-EE-Resources/
 
 <img src="assets/switch.png" alt="switches" width="600">
 
-- Bofa, Vulture Aid & Game Since Bofa counter: <a href="https://github.com/Krule6/BO2-EE-Resources/blob/main/buriedcounters.gsc">Download Here</a> and place the script in
+- Bofa, Vulture Aid & Game Since Bofa counter: <a href="https://github.com/Krule6/BO2-EE-Resources/blob/main/buried_ee_counters.gsc">Download Here</a> and place the script in
   <pre>
   C:\Users\%username%\AppData\Local\Plutonium\storage\t6\scripts\zm
   </pre>
 
-<img src="assets/counters.png" alt="counters" width="600">
+<img src="assets/buried_ee_counters.png" alt="counters" width="600">
 
 - Quick reference ciphers image
 
