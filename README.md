@@ -1,6 +1,6 @@
 # BO2 EE Resources & Solvers
 
-A collection of interactive solvers & resources for Call of Duty: Black Ops II - Zombies Easter Eggs
+A collection of interactive solvers, counters & resources for Call of Duty: Black Ops II - Zombies Easter Eggs
 
 ## Website link
 
@@ -25,17 +25,24 @@ https://krule6.github.io/BO2-EE-Resources/
 <img src="assets/dierise1.png" alt="dierise" width="600">
 
 
-### Buried - Ciphers, Mazes & Switch Tracker
+### Buried - Switch Tracker, Maze Layouts & Counters
 
 - Good/Bad maze layouts
 
 - Interactive tracker to record correct switch order and see possible combinations
 
-<img src="assets/switch.png" alt="dierise" width="600">
+<img src="assets/switch.png" alt="switches" width="600">
+
+- Bofa, Vulture Aid & Game Since Bofa counter: <a href="https://github.com/Krule6/BO2-EE-Resources/blob/main/buriedcounters.gsc">Download Here</a> and place the script in
+  <pre>
+  C:\Users\%username%\AppData\Local\Plutonium\storage\t6\scripts\zm
+  </pre>
+
+<img src="assets/counters.png" alt="counters" width="600">
 
 - Quick reference ciphers image
 
-<img src="assets/cipher.png" alt="dierise" width="600">
+<img src="assets/cipher.png" alt="cipher" width="600">
 
 
 
