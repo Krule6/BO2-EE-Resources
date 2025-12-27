@@ -35,7 +35,7 @@ https://krule6.github.io/BO2-EE-Resources/
 
 - Quick reference ciphers image
 
-<img src="assets/cipher.png" alt="cipher" width="600">
+<img src="assets/cipher1.png" alt="cipher" width="600">
 
 ## Buried - RNG Counters
 
@@ -49,9 +49,9 @@ https://krule6.github.io/BO2-EE-Resources/
 
 | Command | Description                                       |
 | --------| ------------------------------------------------- |
-| bofa    | Toggle Bofa counter (Paralyzer & Timebomb). Counts everytime you get both items from the mysterybox|
-| vulture | Toggle Vulture Aid Counter. Counts everytime you get vulture aid from the witches |
-| gsb     | Toggle Game Since Bofa. Counts how many resets without getting Bofa from the mysterybox | 
+| bofa    | Toggle Bofa counter (Paralyzer & Timebomb). Counts everytime you get both items from the mysterybox |
+| vulture | Toggle Vulture Aid counter. Counts everytime you get vulture aid from the witches |
+| gsb     | Toggle Game Since Bofa counter. Counts how many resets without getting Bofa from the mysterybox | 
 
 <img src="assets/buried_ee_counters.png" alt="counters" width="900">
 
