@@ -39,7 +39,7 @@ https://krule6.github.io/BO2-EE-Resources/
 
 ## Buried - RNG Counters
 
-- Bofa, Vulture Aid & Game Since Bofa counter: <a href="https://github.com/Krule6/BO2-EE-Resources/raw/main/buried_ee_counters.gsc">Download Here</a> and place the script in
+- Bofa, Vulture Aid & Game Since Bofa counter: <a href="https://github.com/Krule6/BO2-EE-Resources/releases/download/bo2-ee-resources/buried_ee_counters.gsc">Download Here</a> and place the script in
   <pre>
   C:\Users\%username%\AppData\Local\Plutonium\storage\t6\scripts\zm
   </pre>
