@@ -5,12 +5,15 @@
 #include maps\mp\gametypes_zm\_hud_util;
 #include maps\mp\gametypes_zm\_hud_message;
 
+
 init()
 {
+    //dvars for counters
     set_dvar_int_if_unset("bofa_counter", 0);
     set_dvar_int_if_unset("vulture_counter", 0);
     set_dvar_int_if_unset("gsb_counter", 0);
 
+    //dvars to toggle hud
     set_dvar_int_if_unset("bofa_hud_enabled", 0);
     set_dvar_int_if_unset("vulture_hud_enabled", 0);
     set_dvar_int_if_unset("gsb_hud_enabled", 0);
@@ -38,7 +41,7 @@ buried_hud()
     self.gsb_hud = self createServerFontString("hudsmall", 1.20);
     self.gsb_counter_hud = self createServerFontString("hudsmall", 1.20);
 
-    // BOFA
+    // bofa
     self.bofa_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -404.4, 199.5);
     self.bofa_hud.label = &"Bofa:";
     self.bofa_hud.color = (1, 0.8, 1);
@@ -49,7 +52,7 @@ buried_hud()
     self.bofa_counter_hud.hidewheninmenu = 1;
     self.bofa_counter_hud SetValue(GetDvarInt("bofa_counter"));
 
-    // VULTURE
+    // vulture aid 
     self.vulture_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -390, 213.5);
     self.vulture_hud.label = &"Vulture Aid:";
     self.vulture_hud.color = (1, 0.8, 1);
@@ -60,7 +63,7 @@ buried_hud()
     self.vulture_counter_hud.hidewheninmenu = 1;
     self.vulture_counter_hud SetValue(GetDvarInt("vulture_counter"));
 
-    // GSB
+    // game since bofa
     self.gsb_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -378, 227.5);
     self.gsb_hud.label = &"Game Since Bofa:";
     self.gsb_hud.color = (1, 0.8, 1);
@@ -73,10 +76,10 @@ buried_hud()
 
     self set_all_hud_alpha(0);
 
-    self thread initial_hud_fade();
+    self thread hud_fade_function();
 }
 
-initial_hud_fade()
+hud_fade_function()
 {
 
     huds = [];
@@ -168,16 +171,19 @@ toggle_hud(hud, counter, dvar, name)
 bofa_counter()
 {
     self endon("disconnect");
-    counter_increased = 0;
+    flag_wait("initial_blackscreen_passed");
 
     while (1)
     {
-        if (self hasweapon("slowgun_zm") && self hasweapon("time_bomb_zm") && !counter_increased)
+        has_paralyzer = self hasweapon("slowgun_zm");
+        has_timebomb  = self hasweapon("time_bomb_zm");
+
+        if (has_paralyzer && has_timebomb && !counter_increased)
         {
             setdvar("bofa_counter", getdvarint("bofa_counter") + 1);
             counter_increased = 1;
         }
-        else if (!self hasweapon("slowgun_zm") || !self hasweapon("time_bomb_zm"))
+        else if (!has_paralyzer || !has_timebomb)
         {
             counter_increased = 0;
         }
@@ -189,38 +195,19 @@ bofa_counter()
 vulture_counter()
 {
     self endon("disconnect");
-
-    if (isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]))
-        self.__last_buried_ghost_perk_acquired = self.pers["buried_ghost_perk_acquired"];
-    else
-        self.__last_buried_ghost_perk_acquired = 0;
+    flag_wait("initial_blackscreen_passed");
 
     while (1)
     {
-        prev_buried_ghost = isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]) ? self.pers["buried_ghost_perk_acquired"] : 0;
+    self waittill("perk_acquired");
 
-        self waittill("perk_acquired");
-
-        last_perk = undefined;
-        if (isdefined(self.perk_history) && self.perk_history.size > 0)
-            last_perk = self.perk_history[self.perk_history.size - 1];
-
-        is_vulture_perk = 0;
-        if (isdefined(last_perk) && (last_perk == "specialty_vulture_aid" || last_perk == "specialty_nomotionsensor"))
-            is_vulture_perk = 1;
-
-        new_buried_ghost = isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]) ? self.pers["buried_ghost_perk_acquired"] : 0;
-        is_free_perk = (new_buried_ghost > prev_buried_ghost) ? 1 : 0;
-
-        if (is_vulture_perk && is_free_perk && !self.has_vulture)
-        {
-            setdvar("vulture_counter", getdvarint("vulture_counter") + 1);
-            self.has_vulture = true;
-        }
-        self.__last_buried_ghost_perk_acquired = new_buried_ghost;
+    if (isdefined(self.perk_vulture) && self.perk_vulture.active && !self.has_vulture)
+    {
+        setdvar("vulture_counter", getdvarint("vulture_counter") + 1);
+        self.has_vulture = true;
     }
 }
-
+}
 gsb_counter()
 {
     self endon("disconnect");
