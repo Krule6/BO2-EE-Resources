@@ -29,11 +29,11 @@ https://krule6.github.io/BO2-EE-Resources/
 
 - Good/Bad maze layouts
 
-- Interactive tracker to record correct switch order and see possible combinations
+- Interactive tracker used to solve the correct order of the switches and see possible combinations
 
 <img src="assets/mazesolver.png" alt="switches" width="800">
 
-- Quick reference ciphers image
+- Ciphers image
 
 <img src="assets/cipher1.png" alt="cipher" width="600">
 
