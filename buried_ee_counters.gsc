@@ -143,15 +143,15 @@ chat_commands()
         switch (tolower(message))
         {
             case "bofa":
-                self toggle_hud(self.bofa_hud, self.bofa_counter_hud, "bofa_hud_enabled", "bofa counter");
+                self toggle_hud(self.bofa_hud, self.bofa_counter_hud, "bofa_hud_enabled", "Bofa counter");
                 break;
 
             case "vulture":
-                self toggle_hud(self.vulture_hud, self.vulture_counter_hud, "vulture_hud_enabled", "vulture counter");
+                self toggle_hud(self.vulture_hud, self.vulture_counter_hud, "vulture_hud_enabled", "Vulture Aid counter");
                 break;
 
             case "gsb":
-                self toggle_hud(self.gsb_hud, self.gsb_counter_hud, "gsb_hud_enabled", "game since bofa counter");
+                self toggle_hud(self.gsb_hud, self.gsb_counter_hud, "gsb_hud_enabled", "Game since Bofa counter");
                 break;
         }
     }
@@ -163,50 +163,76 @@ toggle_hud(hud, counter, dvar, name)
     setdvar(dvar, enabled);
 
     if (enabled)
-        self iprintln("^3" + name + " ^2ON ^7(run fast_restart to apply changes)");
+        self iprintln("^3" + name + " ^2ON ^7(Run fast_restart to apply changes)");
     else
-        self iprintln("^3" + name + " ^1OFF ^7(run fast_restart to apply changes)");
+        self iprintln("^3" + name + " ^1OFF ^7(Run fast_restart to apply changes)");
 }
 
 bofa_counter()
 {
     self endon("disconnect");
     flag_wait("initial_blackscreen_passed");
+    wait(40);
 
-    while (1)
+    counter_increased = 0;
+
+    while(1)
     {
-        has_paralyzer = self hasweapon("slowgun_zm");
-        has_timebomb  = self hasweapon("time_bomb_zm");
+        has_paralyzer = self hasweapon("slowgun_zm"); 
+        has_time_bomb = self hasweapon("time_bomb_zm");
 
-        if (has_paralyzer && has_timebomb && !counter_increased)
+        if (has_paralyzer && has_time_bomb && !counter_increased)
         {
             setdvar("bofa_counter", getdvarint("bofa_counter") + 1);
+
             counter_increased = 1;
         }
-        else if (!has_paralyzer || !has_timebomb)
+        else if (!has_paralyzer || !has_time_bomb)
         {
             counter_increased = 0;
         }
 
         wait(0.5);
-    }
+    }   
 }
 
 vulture_counter()
 {
     self endon("disconnect");
     flag_wait("initial_blackscreen_passed");
+    wait(40);
+
+    if (isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]))
+        self.__last_buried_ghost_perk_acquired = self.pers["buried_ghost_perk_acquired"];
+    else
+        self.__last_buried_ghost_perk_acquired = 0;
 
     while (1)
     {
-    self waittill("perk_acquired");
+        prev_buried_ghost = isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]) ? self.pers["buried_ghost_perk_acquired"] : 0;
 
-    if (isdefined(self.perk_vulture) && self.perk_vulture.active && !self.has_vulture)
-    {
-        setdvar("vulture_counter", getdvarint("vulture_counter") + 1);
-        self.has_vulture = true;
+        self waittill("perk_acquired");
+
+        last_perk = undefined;
+        if (isdefined(self.perk_history) && self.perk_history.size > 0)
+            last_perk = self.perk_history[self.perk_history.size - 1];
+
+        is_vulture_perk = 0;
+        if (isdefined(last_perk) && (last_perk == "specialty_vulture_aid" || last_perk == "specialty_nomotionsensor"))
+            is_vulture_perk = 1;
+
+        new_buried_ghost = isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]) ? self.pers["buried_ghost_perk_acquired"] : 0;
+        is_free_perk = (new_buried_ghost > prev_buried_ghost) ? 1 : 0;
+
+        if (is_vulture_perk && is_free_perk && !self.has_vulture)
+        {
+            setdvar("vulture_counter", getdvarint("vulture_counter") + 1);
+            self.has_vulture = true;
+        }
+        self.__last_buried_ghost_perk_acquired = new_buried_ghost;
+
+        wait(0.5);
     }
-}
 }
 gsb_counter()
 {
