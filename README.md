@@ -1,6 +1,6 @@
 # BO2 EE Resources & Solvers
 
-A collection of interactive solvers, counters & resources for Call of Duty: Black Ops II - Zombies Easter Eggs
+A collection of interactive solvers, counters, and resources for Call of Duty: Black Ops II – Zombies Easter Eggs.
 
 ## Website link
 
@@ -8,13 +8,11 @@ https://krule6.github.io/BO2-EE-Resources/
 
 # Website Resources
 
-## Tranzit - Map & Portal Destinations ( WORK IN PROGRESS )
+## Tranzit - Map & Portal Destinations (Work in Progress)
 
 ## Die Rise - Mahjong Tile Solver
 
-- A simple and interactive Mahjong Tile Solver
-
-- Interactive tracker to record the mahjong tiles corresponding direction/number and see possible combinations
+- An interactive tracker to record each Mahjong tile’s direction and number and view possible combinations.
 
 <img src="assets/dierisesolver.png" alt="dierise" width="800">
 
@@ -23,7 +21,7 @@ https://krule6.github.io/BO2-EE-Resources/
 
 - Good/Bad maze layouts
 
-- Interactive tracker used to solve the correct order of the switches and see possible combinations
+- An interactive tracker used to determine the correct switch order and view possible combinations.
 
 <img src="assets/mazesolver.png" alt="switches" width="800">
 
