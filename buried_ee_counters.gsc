@@ -173,7 +173,6 @@ bofa_counter()
     self endon("disconnect");
     flag_wait("initial_blackscreen_passed");
     wait(40);
-
     counter_increased = 0;
 
     while(1)
@@ -202,37 +201,17 @@ vulture_counter()
     flag_wait("initial_blackscreen_passed");
     wait(40);
 
-    if (isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]))
-        self.__last_buried_ghost_perk_acquired = self.pers["buried_ghost_perk_acquired"];
-    else
-        self.__last_buried_ghost_perk_acquired = 0;
-
     while (1)
     {
-        prev_buried_ghost = isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]) ? self.pers["buried_ghost_perk_acquired"] : 0;
+    self waittill("perk_acquired");
 
-        self waittill("perk_acquired");
-
-        last_perk = undefined;
-        if (isdefined(self.perk_history) && self.perk_history.size > 0)
-            last_perk = self.perk_history[self.perk_history.size - 1];
-
-        is_vulture_perk = 0;
-        if (isdefined(last_perk) && (last_perk == "specialty_vulture_aid" || last_perk == "specialty_nomotionsensor"))
-            is_vulture_perk = 1;
-
-        new_buried_ghost = isdefined(self.pers) && isdefined(self.pers["buried_ghost_perk_acquired"]) ? self.pers["buried_ghost_perk_acquired"] : 0;
-        is_free_perk = (new_buried_ghost > prev_buried_ghost) ? 1 : 0;
-
-        if (is_vulture_perk && is_free_perk && !self.has_vulture)
-        {
-            setdvar("vulture_counter", getdvarint("vulture_counter") + 1);
-            self.has_vulture = true;
-        }
-        self.__last_buried_ghost_perk_acquired = new_buried_ghost;
-
-        wait(0.5);
+    if (isdefined(self.perk_vulture) && self.perk_vulture.active && !self.has_vulture)
+    {
+        setdvar("vulture_counter", getdvarint("vulture_counter") + 1);
+        self.has_vulture = true;
     }
+    wait(0.5);
+}
 }
 gsb_counter()
 {
@@ -266,3 +245,4 @@ gsb_counter()
         wait(0.5);
     }
 }
+
