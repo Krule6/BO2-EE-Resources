@@ -143,15 +143,15 @@ chat_commands()
         switch (tolower(message))
         {
             case "bofa":
-                self toggle_hud(self.bofa_hud, self.bofa_counter_hud, "bofa_hud_enabled", "Bofa counter");
+                self toggle_hud(self.bofa_hud, self.bofa_counter_hud, "bofa_hud_enabled", "bofa counter");
                 break;
 
             case "vulture":
-                self toggle_hud(self.vulture_hud, self.vulture_counter_hud, "vulture_hud_enabled", "Vulture Aid counter");
+                self toggle_hud(self.vulture_hud, self.vulture_counter_hud, "vulture_hud_enabled", "vulture counter");
                 break;
 
             case "gsb":
-                self toggle_hud(self.gsb_hud, self.gsb_counter_hud, "gsb_hud_enabled", "Game since Bofa counter");
+                self toggle_hud(self.gsb_hud, self.gsb_counter_hud, "gsb_hud_enabled", "game since bofa counter");
                 break;
         }
     }
@@ -163,9 +163,9 @@ toggle_hud(hud, counter, dvar, name)
     setdvar(dvar, enabled);
 
     if (enabled)
-        self iprintln("^3" + name + " ^2ON ^7(Run fast_restart to apply changes)");
+        self iprintln("^3" + name + " ^2ON ^7(run fast_restart to apply changes)");
     else
-        self iprintln("^3" + name + " ^1OFF ^7(Run fast_restart to apply changes)");
+        self iprintln("^3" + name + " ^1OFF ^7(run fast_restart to apply changes)");
 }
 
 bofa_counter()
@@ -173,26 +173,25 @@ bofa_counter()
     self endon("disconnect");
     flag_wait("initial_blackscreen_passed");
     wait(40);
-    counter_increased = 0;
 
-    while(1)
+
+    while (1)
     {
-        has_paralyzer = self hasweapon("slowgun_zm"); 
-        has_time_bomb = self hasweapon("time_bomb_zm");
+        has_paralyzer = self hasweapon("slowgun_zm");
+        has_timebomb  = self hasweapon("time_bomb_zm");
 
-        if (has_paralyzer && has_time_bomb && !counter_increased)
+        if (has_paralyzer && has_timebomb && !counter_increased)
         {
             setdvar("bofa_counter", getdvarint("bofa_counter") + 1);
-
             counter_increased = 1;
         }
-        else if (!has_paralyzer || !has_time_bomb)
+        else if (!has_paralyzer || !has_timebomb)
         {
             counter_increased = 0;
         }
 
         wait(0.5);
-    }   
+    }
 }
 
 vulture_counter()
@@ -201,17 +200,18 @@ vulture_counter()
     flag_wait("initial_blackscreen_passed");
     wait(40);
 
+
     while (1)
     {
-    self waittill("perk_acquired");
+        self waittill("perk_acquired");
 
-    if (isdefined(self.perk_vulture) && self.perk_vulture.active && !self.has_vulture)
-    {
-        setdvar("vulture_counter", getdvarint("vulture_counter") + 1);
-        self.has_vulture = true;
+        if (isdefined(self.perk_vulture) && self.perk_vulture.active && !self.has_vulture)
+        {
+            setdvar("vulture_counter", getdvarint("vulture_counter") + 1);
+            self.has_vulture = true;
+        }
+        wait(0.5);
     }
-    wait(0.5);
-}
 }
 gsb_counter()
 {
@@ -245,4 +245,3 @@ gsb_counter()
         wait(0.5);
     }
 }
-
