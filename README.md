@@ -10,12 +10,6 @@ https://krule6.github.io/BO2-EE-Resources/
 
 ## Tranzit - Map & Portal Destinations ( WORK IN PROGRESS )
 
-- A visual map of tranzit with all locations for the mystery box, teleports, site locations, perk machines etc
-  
-- Features a hover function that shows the in game teleport locations to help players navigate through the map
-
-<img src="assets/map.png" alt="dierise" width="800">
-
 ## Die Rise - Mahjong Tile Solver
 
 - A simple and interactive Mahjong Tile Solver
