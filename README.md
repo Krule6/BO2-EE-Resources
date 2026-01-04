@@ -34,7 +34,7 @@ https://krule6.github.io/BO2-EE-Resources/
   <pre>
   C:\Users\%username%\AppData\Local\Plutonium\storage\t6\scripts\zm
   </pre>
-- This script only saves data while you are in the same Plutonium session in which it was started. If you close or restart Plutonium, the data will be reset. Commands such as "fast_restart", "map_restart" and "disconnect" will not reset your progress
+- This script only saves the data while you are in the same Plutonium session in which it was started. If you close or restart Plutonium, your progress will be reset. Commands such as "fast_restart", "map_restart" and "disconnect" will not reset your progress
 
 ### Chat commands
 
