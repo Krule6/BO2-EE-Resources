@@ -5,7 +5,6 @@
 #include maps\mp\gametypes_zm\_hud_util;
 #include maps\mp\gametypes_zm\_hud_message;
 
-
 init()
 {
     //dvars for counters
@@ -13,16 +12,26 @@ init()
     set_dvar_int_if_unset("vulture_counter", 0);
     set_dvar_int_if_unset("gsb_counter", 0);
 
+    //dvars for perk counts
+    set_dvar_int_if_unset("perk_count_0", 0);
+    set_dvar_int_if_unset("perk_count_1", 0);
+    set_dvar_int_if_unset("perk_count_2", 0);
+    set_dvar_int_if_unset("perk_count_3", 0);
+    set_dvar_int_if_unset("perk_count_4", 0);
+    set_dvar_int_if_unset("perk_count_5", 0);
+
     //dvars to toggle hud
     set_dvar_int_if_unset("bofa_hud_enabled", 0);
     set_dvar_int_if_unset("vulture_hud_enabled", 0);
     set_dvar_int_if_unset("gsb_hud_enabled", 0);
+    set_dvar_int_if_unset("perks_hud_enabled", 0);
 
     level waittill("connected", player);
     player thread buried_hud();
     player thread bofa_counter();
     player thread vulture_counter();
     player thread gsb_counter();
+    player thread perk_counter();
     player thread chat_commands();
 }
 
@@ -33,6 +42,36 @@ buried_hud()
     self.bofa_visible    = getdvarint("bofa_hud_enabled");
     self.vulture_visible = getdvarint("vulture_hud_enabled");
     self.gsb_visible     = getdvarint("gsb_hud_enabled");
+    self.perks_visible   = getdvarint("perks_hud_enabled");
+
+    // Initialize perk tracking arrays
+    self.perk_structs = [];
+    self.perk_names   = [];
+    self.perk_counts  = [];
+    self.has_perk     = [];
+
+    // Struct names
+    self.perk_structs[self.perk_structs.size] = "specialty_armorvest";
+    self.perk_structs[self.perk_structs.size] = "specialty_fastreload";
+    self.perk_structs[self.perk_structs.size] = "specialty_rof";
+    self.perk_structs[self.perk_structs.size] = "specialty_longersprint";
+    self.perk_structs[self.perk_structs.size] = "specialty_additionalprimaryweapon";
+    self.perk_structs[self.perk_structs.size] = "specialty_nomotionsensor";
+
+    // Display names
+    self.perk_names[self.perk_names.size] = "Juggernog";
+    self.perk_names[self.perk_names.size] = "Speed Cola";
+    self.perk_names[self.perk_names.size] = "Double Tap";
+    self.perk_names[self.perk_names.size] = "Stamin-Up";
+    self.perk_names[self.perk_names.size] = "Mule Kick";
+    self.perk_names[self.perk_names.size] = "Vulture Aid";
+
+    // Load saved counts from dvars
+    for (i = 0; i < self.perk_structs.size; i++)
+    {
+        self.perk_counts[i] = getdvarint("perk_count_" + i);
+        self.has_perk[i] = false;
+    }
 
     self.bofa_hud = self createServerFontString("hudsmall", 1.20);
     self.bofa_counter_hud = self createServerFontString("hudsmall", 1.20);
@@ -41,38 +80,67 @@ buried_hud()
     self.gsb_hud = self createServerFontString("hudsmall", 1.20);
     self.gsb_counter_hud = self createServerFontString("hudsmall", 1.20);
 
-    // bofa
-    self.bofa_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -404.4, 199.5);
+    // bofa - adjust position based on vulture counter visibility
+    bofa_y = self.vulture_visible ? 205 : 218;
+    self.bofa_hud setpoint("BOTTOMLEFT", "BOTTOMLEFT", -406, bofa_y);
     self.bofa_hud.label = &"Bofa:";
     self.bofa_hud.color = (1, 0.8, 1);
     self.bofa_hud.hidewheninmenu = 1;
 
-    self.bofa_counter_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -388.4, 199.5);
+    self.bofa_counter_hud setpoint("BOTTOMLEFT", "BOTTOMLEFT", -390, bofa_y);
     self.bofa_counter_hud.color = (0.99, 0.91, 0.99);
     self.bofa_counter_hud.hidewheninmenu = 1;
     self.bofa_counter_hud SetValue(GetDvarInt("bofa_counter"));
 
     // vulture aid 
-    self.vulture_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -390, 213.5);
+    self.vulture_hud setpoint("BOTTOMLEFT", "BOTTOMLEFT", -393, 218);
     self.vulture_hud.label = &"Vulture Aid:";
     self.vulture_hud.color = (1, 0.8, 1);
     self.vulture_hud.hidewheninmenu = 1;
 
-    self.vulture_counter_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -360, 213.5);
+    self.vulture_counter_hud setpoint("BOTTOMLEFT", "BOTTOMLEFT", -364, 218);
     self.vulture_counter_hud.color = (0.99, 0.91, 0.99);
     self.vulture_counter_hud.hidewheninmenu = 1;
     self.vulture_counter_hud SetValue(GetDvarInt("vulture_counter"));
 
     // game since bofa
-    self.gsb_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -378, 227.5);
+    self.gsb_hud setpoint("BOTTOMLEFT", "BOTTOMLEFT", -381, 231);
     self.gsb_hud.label = &"Game Since Bofa:";
     self.gsb_hud.color = (1, 0.8, 1);
     self.gsb_hud.hidewheninmenu = 1;
 
-    self.gsb_counter_hud setpoint("BOTTOMRIGHT", "BOTTOMRIGHT", -335, 227.5);
+    self.gsb_counter_hud setpoint("BOTTOMLEFT", "BOTTOMLEFT", -340, 231);
     self.gsb_counter_hud.color = (0.99, 0.91, 0.99);
     self.gsb_counter_hud.hidewheninmenu = 1;
     self.gsb_counter_hud SetValue(GetDvarInt("gsb_counter"));
+
+    // Create perk HUD elements
+    self.perk_hud = [];
+    
+    // Define colors for each perk
+    perk_colors = [];
+    perk_colors[0] = (1, 0.5, 0.5);    // Juggernog - Red/Pink
+    perk_colors[1] = (0.5, 1, 0.6);    // Speed Cola - Green
+    perk_colors[2] = (1, 0.6, 0.5);    // Double Tap - Golden Yellow
+    perk_colors[3] = (1, 1, 0.5);      // Stamin-Up - Yellow
+    perk_colors[4] = (0.5, 1, 0.5);    // Mule Kick - Lime Green
+    perk_colors[5] = (1, 0.4, 0.5);    // Vulture Aid - Orange
+    
+    // Adjust perk HUD starting position based on vulture counter visibility
+    perk_start_y = self.vulture_visible ? 122 : 130;
+    
+    for (i = 0; i < self.perk_names.size; i++)
+    {
+        hud = self createServerFontString("hudsmall", 1.20);
+        hud setpoint("BOTTOMLEFT", "BOTTOMLEFT", -392, perk_start_y + (i * 14));
+        hud.color = perk_colors[i];
+        hud.alpha = 0;
+        hud.hidewheninmenu = 1;
+        hud.label = istring(self.perk_names[i] + ": ");
+
+        self.perk_hud[i] = hud;
+        self.perk_hud[i] SetValue(getdvarint("perk_count_" + i));
+    }
 
     self set_all_hud_alpha(0);
 
@@ -100,6 +168,18 @@ hud_fade_function()
     {
         huds[huds.size] = self.gsb_hud;
         huds[huds.size] = self.gsb_counter_hud;
+    }
+
+    if (self.perks_visible)
+    {
+        for (i = 0; i < self.perk_hud.size; i++)
+        {
+            // Skip Vulture Aid (index 5) if vulture counter is enabled
+            if (i == 5 && self.vulture_visible)
+                continue;
+            
+            huds[huds.size] = self.perk_hud[i];
+        }
     }
 
 
@@ -130,6 +210,11 @@ set_all_hud_alpha(value)
     self.vulture_counter_hud.alpha = value;
     self.gsb_hud.alpha = value;
     self.gsb_counter_hud.alpha = value;
+    
+    for (i = 0; i < self.perk_hud.size; i++)
+    {
+        self.perk_hud[i].alpha = value;
+    }
 }
 
 chat_commands()
@@ -153,6 +238,10 @@ chat_commands()
             case "gsb":
                 self toggle_hud(self.gsb_hud, self.gsb_counter_hud, "gsb_hud_enabled", "game since bofa counter");
                 break;
+
+            case "perks":
+                self toggle_perks_hud();
+                break;
         }
     }
 }
@@ -166,6 +255,17 @@ toggle_hud(hud, counter, dvar, name)
         self iprintln("^3" + name + " ^2ON ^7(run fast_restart to apply changes)");
     else
         self iprintln("^3" + name + " ^1OFF ^7(run fast_restart to apply changes)");
+}
+
+toggle_perks_hud()
+{
+    enabled = !getdvarint("perks_hud_enabled");
+    setdvar("perks_hud_enabled", enabled);
+
+    if (enabled)
+        self iprintln("^3perk tracker ^2ON ^7(run fast_restart to apply changes)");
+    else
+        self iprintln("^3perk tracker ^1OFF ^7(run fast_restart to apply changes)");
 }
 
 bofa_counter()
@@ -245,3 +345,29 @@ gsb_counter()
         wait(0.5);
     }
 }
+
+perk_counter()
+{
+    self endon("disconnect");
+
+    for (;;)
+    {
+        self waittill("perk_acquired");
+        wait 0.05;
+
+        for (i = 0; i < self.perk_structs.size; i++)
+        {
+            perk_struct = self.perk_structs[i];
+
+            if (self hasPerk(perk_struct) && !self.has_perk[i])
+            {
+                self.perk_counts[i]++;
+                self.has_perk[i] = true;
+                setdvar("perk_count_" + i, self.perk_counts[i]);
+                self.perk_hud[i] SetValue(getdvarint("perk_count_" + i));
+            }
+        }
+    }
+}
+
+
