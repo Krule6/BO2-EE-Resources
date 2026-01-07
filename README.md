@@ -46,7 +46,7 @@ https://krule6.github.io/BO2-EE-Resources/
 | perks   | Toggle Perks counter. Counts each time a player gets a perk | 
 
 
-<img src="assets/buried_ee_counters.png" alt="counters" width="900">
+<img src="assets/buriedcounters.png" alt="counters" width="900">
 
 
 
