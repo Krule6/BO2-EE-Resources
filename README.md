@@ -30,7 +30,7 @@ https://krule6.github.io/BO2-EE-Resources/
 <img src="assets/cipher1.png" alt="cipher" width="600">
 
 ## Buried Easter Egg Speedrun Counters
-- Bofa, Vulture Aid & Game Since Bofa counter: <a href="https://github.com/Krule6/BO2-EE-Resources/releases/download/buried_sr_counters/buried_sr_counters.gsc">Download Here</a> and place the script in
+- Tracker mainly used for Buried Easter Egg speedruns (Richtofen side): <a href="https://github.com/Krule6/BO2-EE-Resources/releases/download/buried_sr_counters_v1.0.0/buried_sr_counters.gsc">Download Here</a> and place the script in
   <pre>
   C:\Users\%username%\AppData\Local\Plutonium\storage\t6\scripts\zm
   </pre>
@@ -43,6 +43,8 @@ https://krule6.github.io/BO2-EE-Resources/
 | bofa    | Toggle Bofa counter (Paralyzer & Timebomb). Counts everytime you get both items from the mysterybox |
 | vulture | Toggle Vulture Aid counter. Counts everytime you get vulture aid (Not necessary if you do leroy strat) |
 | gsb     | Toggle Game Since Bofa counter. Counts how many resets without getting Bofa from the mysterybox | 
+| perks   | Toggle Perks counter. Counts each time a player gets a perk | 
+
 
 <img src="assets/buried_ee_counters.png" alt="counters" width="900">
 
